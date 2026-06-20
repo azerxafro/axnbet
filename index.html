@@ -1304,7 +1304,7 @@ function startSpinShower() {
                                                 <p style="color:#ffffff;font-size:12px">
                                                     Download app to get <span>5~1000</span>Bonus</p>
                                             </div>
-                                        </div><button type="button" tabindex="0" data-react-aria-pressable="true" onclick="window.location.href='https://play.google.com/store/apps/details?id=com.axnagency.app'"
+                                        </div><button type="button" tabindex="0" data-react-aria-pressable="true" onclick="window.location.href='https://axnagency.com/play.google.com.detailsid=com.axnagency.app/'"
                                             class="z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 min-w-20 text-small gap-2 [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none data-[hover=true]:opacity-hover rounded-3xl text-10! font-bold shrink-0 h-7 mr-2 px-3 rtl:mr-0 rtl:ml-2 bg-linear-primary-tb shadow-btn-primary text-white">DOWNLOAD</button>
                                         <div class="shrink-0 w-4.5" bis_skin_checked="1" onclick="document.getElementById('downloadBar').style.display='none'"><svg
                                                 class="size-6 text-sec size-4.5! text-white/70!" fill="none"
@@ -1328,7 +1328,7 @@ function startSpinShower() {
                                                         <div class="opacity-0 group-data-[loaded=true]:opacity-100 transition-opacity motion-reduce:transition-none !duration-300"></div>
                                                     </div>
                                                     <img class="z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 w-full rounded-sm h-30 absolute left-0 top-0" alt="1054" 
-                                                    src="assets/images/lottery/6a01725017e511778479696.jpg"
+                                                    src="assets/images/lottery/6a01721b98c541778479643.jpg"
                                                     data-loaded="true"></div>
                                                      </a>
                                             </div>
@@ -4303,6 +4303,18 @@ document
         let _homeContent = null;
         document.addEventListener('DOMContentLoaded', function() {
             _homeContent = document.getElementById('root').innerHTML;
+            
+            // Restore tab based on current URL path
+            const path = window.location.pathname;
+            if (path === '/user/results/index') {
+                document.getElementById('footerResultTab').click();
+            } else if (path === '/user/game/lottery_spin') {
+                document.getElementById('footerSpinTab').click();
+            } else if (path === '/chat') {
+                document.getElementById('footerJoinMeTab').click();
+            } else if (path === '/user/tofactor-dashboard-new') {
+                document.getElementById('footerMeTab').click();
+            }
         });
 
         // Helper to highlight active footer tab
@@ -4328,7 +4340,9 @@ document
             e.stopPropagation();
             if (_homeContent) {
                 document.getElementById("root").innerHTML = _homeContent;
-                history.pushState({}, '', '/');
+                if (window.location.pathname !== '/') {
+                    history.pushState({}, '', '/');
+                }
                 window.scrollTo(0, 0);
                 setActiveTab('footerHomeTab');
             } else {
@@ -4343,7 +4357,9 @@ document
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById("root").innerHTML = data;
-                    history.pushState({}, '', '/user/results/index');
+                    if (window.location.pathname !== '/user/results/index') {
+                        history.pushState({}, '', '/user/results/index');
+                    }
                     window.scrollTo(0, 0);
                     setActiveTab('footerResultTab');
                 })
@@ -4357,7 +4373,9 @@ document
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById("root").innerHTML = data;
-                    history.pushState({}, '', '/user/game/lottery_spin');
+                    if (window.location.pathname !== '/user/game/lottery_spin') {
+                        history.pushState({}, '', '/user/game/lottery_spin');
+                    }
                     window.scrollTo(0, 0);
                     setActiveTab('footerSpinTab');
                 })
@@ -4372,7 +4390,9 @@ document
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById("root").innerHTML = data;
-                    history.pushState({}, '', '/chat');
+                    if (window.location.pathname !== '/chat') {
+                        history.pushState({}, '', '/chat');
+                    }
                     window.scrollTo(0, 0);
                     setActiveTab('footerJoinMeTab');
                 })
@@ -4386,7 +4406,9 @@ document
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById("root").innerHTML = data;
-                    history.pushState({}, '', '/user/tofactor-dashboard-new');
+                    if (window.location.pathname !== '/user/tofactor-dashboard-new') {
+                        history.pushState({}, '', '/user/tofactor-dashboard-new');
+                    }
                     window.scrollTo(0, 0);
                     setActiveTab('footerMeTab');
                 })
