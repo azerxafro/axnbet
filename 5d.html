@@ -15,7 +15,7 @@
             width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd;
             display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold;
             margin: 0 5px; color: transparent; background-color: white;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease; cursor: pointer;
         }
         .circle-select.selected {
             border-color: #176BE3; color: #176BE3;
@@ -42,24 +42,30 @@
         }
         .time-label { font-size: 8px; color: #E27B49; display: block; margin-top: -2px; }
         
-        .header-bar {
-            position: sticky; top: 0; z-index: 50; background-color: white;
-        }
+        .header-bar { position: sticky; top: 0; z-index: 50; background-color: white; }
         .bottom-bar {
             position: fixed; bottom: 0; left: 0; right: 0; background-color: white; z-index: 50;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05); padding: 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px;
         }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
+            border-radius: 2px; padding: 16px; position: fixed; z-index: 100; left: 50%; transform: translateX(-50%); bottom: 90px;
+            font-size: 14px; border-radius: 8px; transition: visibility 0.5s, opacity 0.5s linear; opacity: 0;
+        }
+        #toast.show { visibility: visible; opacity: 1; }
     </style>
 </head>
 <body class="pb-24">
 
     <!-- Header -->
     <div class="header-bar flex items-center justify-between px-4 py-3 border-b">
-        <div class="flex items-center" onclick="window.history.back()">
+        <div class="flex items-center cursor-pointer" onclick="window.history.back()">
             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
             <h1 class="text-lg font-bold">4 & 5 Digit Game</h1>
         </div>
-        <button class="btn-green px-4 py-1.5 rounded-lg font-bold text-sm">Sign Up</button>
+        <button onclick="window.location.href='/login.html'" class="btn-green px-4 py-1.5 rounded-lg font-bold text-sm">Sign In</button>
     </div>
     
     <!-- Announcement -->
@@ -74,16 +80,13 @@
             <div>
                 <h2 class="font-bold text-lg leading-tight mb-1">MUMBAI QUICK</h2>
                 <div class="text-xs text-white/80">Last draw</div>
-                <div class="text-sm font-semibold">260620080100139</div>
+                <div class="text-sm font-semibold" id="last-draw-id">Loading...</div>
             </div>
             <div class="bg-orange-600 rounded-lg p-2 text-center">
                 <div class="text-[10px] text-white/80 mb-1 uppercase">Last draw result</div>
-                <div class="flex">
-                    <div class="ball red">5</div>
-                    <div class="ball orange">7</div>
-                    <div class="ball blue">2</div>
-                    <div class="ball green">1</div>
-                    <div class="ball cyan">5</div>
+                <div class="flex" id="last-draw-result">
+                    <!-- Balls inserted here -->
+                    <span class="text-sm">...</span>
                 </div>
             </div>
         </div>
@@ -91,14 +94,13 @@
         <div class="flex justify-between items-center">
             <div>
                 <div class="text-xs text-white/80">Next Draw</div>
-                <div class="text-sm font-semibold">260620080100140</div>
+                <div class="text-sm font-semibold" id="next-draw-id">Loading...</div>
             </div>
             <div class="flex items-center gap-1 font-mono">
-                <div class="time-box">00<span class="time-label">HOU</span></div><span class="font-bold">:</span>
-                <div class="time-box">01<span class="time-label">MIN</span></div><span class="font-bold">:</span>
-                <div class="time-box" id="countdown-sec">20<span class="time-label">SEC</span></div>
+                <div class="time-box" id="countdown-min">00<span class="time-label">MIN</span></div><span class="font-bold">:</span>
+                <div class="time-box" id="countdown-sec">00<span class="time-label">SEC</span></div>
             </div>
-            <div class="flex gap-2">
+            <div class="flex gap-2 cursor-pointer">
                 <div class="flex flex-col items-center justify-center">
                     <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="text-[10px]">Rules</span>
@@ -108,55 +110,53 @@
     </div>
 
     <!-- 4 Digit Section -->
-    <div class="m-3 bg-white rounded-xl shadow p-4">
+    <div class="m-3 bg-white rounded-xl shadow p-4" id="section-4d">
         <div class="flex justify-between items-center mb-4">
             <h3 class="font-bold text-gray-800">4 Digit <span class="text-xs font-normal text-gray-500">₹5.00/Ticket</span></h3>
             <div class="font-black text-xl text-yellow-500 italic drop-shadow-sm" style="-webkit-text-stroke: 1px #1d4ed8;">₹10,000</div>
         </div>
         
-        <div class="flex justify-center gap-2 mb-6">
-            <div class="flex flex-col items-center"><div class="text-red-500 font-bold mb-1">A</div><div class="circle-select red" onclick="selectRandomNum(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-orange-500 font-bold mb-1">B</div><div class="circle-select orange" onclick="selectRandomNum(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-blue-500 font-bold mb-1">C</div><div class="circle-select blue" onclick="selectRandomNum(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-green-500 font-bold mb-1">D</div><div class="circle-select green" onclick="selectRandomNum(this)">-</div></div>
+        <div class="flex justify-center gap-2 mb-6 bet-inputs">
+            <div class="flex flex-col items-center"><div class="text-red-500 font-bold mb-1">A</div><div class="circle-select red" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-orange-500 font-bold mb-1">B</div><div class="circle-select orange" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-blue-500 font-bold mb-1">C</div><div class="circle-select blue" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-green-500 font-bold mb-1">D</div><div class="circle-select green" onclick="cycleNumber(this)">-</div></div>
         </div>
         
         <div class="flex gap-2 items-center">
             <div class="flex items-center border rounded bg-gray-50 overflow-hidden h-10 w-24">
-                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600">-</button>
-                <input type="number" value="1" class="w-full h-full text-center bg-transparent border-none outline-none font-bold text-sm" readonly>
-                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600">+</button>
+                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600" onclick="changeMultiplier('4d', -1)">-</button>
+                <input type="number" id="mult-4d" value="1" class="w-full h-full text-center bg-transparent border-none outline-none font-bold text-sm" readonly>
+                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600" onclick="changeMultiplier('4d', 1)">+</button>
             </div>
-            <button class="flex-1 h-10 border border-green-500 text-green-500 rounded font-semibold text-sm active:bg-green-50" onclick="randomizeCircles(this.parentElement.previousElementSibling)">Random</button>
-            <button class="flex-1 h-10 bg-green-500 text-white rounded font-bold text-sm active:bg-green-600 shadow-sm">BOX</button>
-            <button class="flex-1 h-10 bg-green-500 text-white rounded font-bold text-sm active:bg-green-600 shadow-sm">Add</button>
+            <button class="flex-1 h-10 border border-green-500 text-green-500 rounded font-semibold text-sm active:bg-green-50" onclick="randomizeCircles('section-4d')">Random</button>
+            <button class="flex-1 h-10 bg-green-500 text-white rounded font-bold text-sm active:bg-green-600 shadow-sm" onclick="addToCart('4d')">Add</button>
         </div>
     </div>
 
     <!-- 5 Digit Section -->
-    <div class="m-3 bg-white rounded-xl shadow p-4">
+    <div class="m-3 bg-white rounded-xl shadow p-4" id="section-5d">
         <div class="flex justify-between items-center mb-4">
             <h3 class="font-bold text-gray-800">5 Digit <span class="text-xs font-normal text-gray-500">₹10.00/Ticket</span></h3>
             <div class="font-black text-xl text-yellow-500 italic drop-shadow-sm" style="-webkit-text-stroke: 1px #1d4ed8;">₹1,50,000</div>
         </div>
         
-        <div class="flex justify-center gap-2 mb-6">
-            <div class="flex flex-col items-center"><div class="text-red-500 font-bold mb-1">A</div><div class="circle-select red" onclick="selectRandomNum(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-orange-500 font-bold mb-1">B</div><div class="circle-select orange" onclick="selectRandomNum(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-blue-500 font-bold mb-1">C</div><div class="circle-select blue" onclick="selectRandomNum(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-green-500 font-bold mb-1">D</div><div class="circle-select green" onclick="selectRandomNum(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-cyan-500 font-bold mb-1">E</div><div class="circle-select cyan" onclick="selectRandomNum(this)">-</div></div>
+        <div class="flex justify-center gap-2 mb-6 bet-inputs">
+            <div class="flex flex-col items-center"><div class="text-red-500 font-bold mb-1">A</div><div class="circle-select red" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-orange-500 font-bold mb-1">B</div><div class="circle-select orange" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-blue-500 font-bold mb-1">C</div><div class="circle-select blue" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-green-500 font-bold mb-1">D</div><div class="circle-select green" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-cyan-500 font-bold mb-1">E</div><div class="circle-select cyan" onclick="cycleNumber(this)">-</div></div>
         </div>
         
         <div class="flex gap-2 items-center">
             <div class="flex items-center border rounded bg-gray-50 overflow-hidden h-10 w-24">
-                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600">-</button>
-                <input type="number" value="1" class="w-full h-full text-center bg-transparent border-none outline-none font-bold text-sm" readonly>
-                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600">+</button>
+                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600" onclick="changeMultiplier('5d', -1)">-</button>
+                <input type="number" id="mult-5d" value="1" class="w-full h-full text-center bg-transparent border-none outline-none font-bold text-sm" readonly>
+                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600" onclick="changeMultiplier('5d', 1)">+</button>
             </div>
-            <button class="flex-1 h-10 border border-green-500 text-green-500 rounded font-semibold text-sm active:bg-green-50" onclick="randomizeCircles(this.parentElement.previousElementSibling)">Random</button>
-            <button class="flex-1 h-10 bg-green-500 text-white rounded font-bold text-sm active:bg-green-600 shadow-sm">BOX</button>
-            <button class="flex-1 h-10 bg-green-500 text-white rounded font-bold text-sm active:bg-green-600 shadow-sm">Add</button>
+            <button class="flex-1 h-10 border border-green-500 text-green-500 rounded font-semibold text-sm active:bg-green-50" onclick="randomizeCircles('section-5d')">Random</button>
+            <button class="flex-1 h-10 bg-green-500 text-white rounded font-bold text-sm active:bg-green-600 shadow-sm" onclick="addToCart('5d')">Add</button>
         </div>
     </div>
 
@@ -164,13 +164,13 @@
     <div class="m-3 bg-white rounded shadow mt-6">
         <div class="flex border-b">
             <button class="flex-1 py-3 text-center font-bold text-green-600 border-b-2 border-green-600">Result history</button>
-            <button class="flex-1 py-3 text-center font-semibold text-gray-500">My Order</button>
+            <button class="flex-1 py-3 text-center font-semibold text-gray-500" onclick="showToast('My Orders feature coming soon')">My Order</button>
         </div>
         <div class="p-0">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50 text-gray-500 text-xs">
                     <tr>
-                        <th class="py-2 px-3 text-left font-medium">Issue</th>
+                        <th class="py-2 px-3 text-left font-medium">Cycle #</th>
                         <th class="py-2 px-3 text-center font-medium">Time</th>
                         <th class="py-2 px-3 text-right font-medium">Number</th>
                     </tr>
@@ -185,62 +185,244 @@
     <!-- Bottom Cart Bar -->
     <div class="bottom-bar flex justify-between items-center">
         <div class="flex items-center">
-            <div class="relative mr-3">
+            <div class="relative mr-3 cursor-pointer" onclick="clearCart()">
                 <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold border border-white">0</span>
+                <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold border border-white">0</span>
             </div>
             <div>
-                <div class="font-bold text-xl leading-none">₹0.00</div>
-                <div class="text-xs text-gray-500">0 BIDS</div>
+                <div class="font-bold text-xl leading-none" id="cart-total">₹0.00</div>
+                <div class="text-xs text-gray-500"><span id="cart-bids">0</span> BIDS</div>
             </div>
         </div>
-        <button class="bg-green-300 text-green-800 font-bold px-8 py-3 rounded-lg shadow-sm">Pay Now</button>
+        <button class="bg-green-500 text-white font-bold px-8 py-3 rounded-lg shadow-sm active:bg-green-600" id="pay-btn" onclick="payNow()">Pay Now</button>
     </div>
 
+    <div id="toast"></div>
+
     <script>
-        function selectRandomNum(el) {
-            const num = Math.floor(Math.random() * 10);
-            el.innerText = num;
+        let currentCycleId = null;
+        let activeDrawTime = null;
+        let cart = [];
+        const PRICES = { '4d': 5.00, '5d': 10.00 };
+        const colors = ['red', 'orange', 'blue', 'green', 'cyan'];
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        // --- Interaction Logic ---
+        function cycleNumber(el) {
+            let current = parseInt(el.innerText);
+            if (isNaN(current)) current = -1;
+            current = (current + 1) % 10;
+            el.innerText = current;
             el.classList.add('selected');
         }
 
-        function randomizeCircles(container) {
-            const circles = container.querySelectorAll('.circle-select');
-            circles.forEach(el => selectRandomNum(el));
+        function randomizeCircles(containerId) {
+            const circles = document.querySelectorAll(`#${containerId} .circle-select`);
+            circles.forEach(el => {
+                el.innerText = Math.floor(Math.random() * 10);
+                el.classList.add('selected');
+            });
         }
 
-        // Generate mock history
-        const tbody = document.getElementById('history-table');
-        const historyData = [
-            { issue: '260620080100138', time: 'Jun 20 05:29 PM', nums: ['7','7','2','5','7'] },
-            { issue: '260620080100137', time: 'Jun 20 05:27 PM', nums: ['4','6','8','4','6'] },
-            { issue: '260620080100136', time: 'Jun 20 05:25 PM', nums: ['1','7','8','7','5'] },
-            { issue: '260620080100135', time: 'Jun 20 05:23 PM', nums: ['9','6','6','7','3'] },
-            { issue: '260620080100134', time: 'Jun 20 05:21 PM', nums: ['0','5','2','1','9'] }
-        ];
+        function changeMultiplier(type, delta) {
+            const input = document.getElementById(`mult-${type}`);
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            if (val > 100) val = 100;
+            input.value = val;
+        }
 
-        const colors = ['red', 'orange', 'blue', 'green', 'cyan'];
+        function addToCart(type) {
+            const container = document.getElementById(`section-${type}`);
+            const circles = container.querySelectorAll('.circle-select');
+            
+            let nums = [];
+            for(let el of circles) {
+                if (el.innerText === '-') {
+                    showToast('Please select all digits');
+                    return;
+                }
+                nums.push(el.innerText);
+            }
 
-        historyData.forEach(row => {
-            const tr = document.createElement('tr');
-            const balls = row.nums.map((n, i) => `<div class="ball ${colors[i%5]}">${n}</div>`).join('');
-            tr.innerHTML = `
-                <td class="py-3 px-3 text-xs text-gray-600">${row.issue}</td>
-                <td class="py-3 px-3 text-xs text-center font-medium">${row.time}</td>
-                <td class="py-3 px-3 text-right">
-                    <div class="flex justify-end">${balls}</div>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
+            const multiplier = parseInt(document.getElementById(`mult-${type}`).value);
+            const price = PRICES[type];
+            
+            cart.push({
+                type: type,
+                numbers: nums.join(','), // CSV format
+                amount: price,
+                multiplier: multiplier,
+                total: price * multiplier
+            });
 
-        // Countdown Mock
-        let sec = 20;
+            updateCartUI();
+            showToast('Added to cart');
+            
+            // Reset selection
+            circles.forEach(el => {
+                el.innerText = '-';
+                el.classList.remove('selected');
+            });
+            document.getElementById(`mult-${type}`).value = 1;
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const count = cart.length;
+            const total = cart.reduce((sum, item) => sum + item.total, 0);
+            
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('cart-bids').innerText = count;
+            document.getElementById('cart-total').innerText = `₹${total.toFixed(2)}`;
+            
+            const payBtn = document.getElementById('pay-btn');
+            if (count > 0) {
+                payBtn.classList.remove('bg-green-300', 'text-green-800');
+                payBtn.classList.add('bg-green-500', 'text-white');
+            } else {
+                payBtn.classList.add('bg-green-300', 'text-green-800');
+                payBtn.classList.remove('bg-green-500', 'text-white');
+            }
+        }
+
+        // --- API Integration ---
+        async function fetchDraws() {
+            try {
+                const res = await fetch('/api/5d/draw');
+                const data = await res.json();
+                
+                if (data.success) {
+                    if (data.activeDraw) {
+                        currentCycleId = data.activeDraw.id;
+                        document.getElementById('next-draw-id').innerText = data.activeDraw.cycle_number;
+                        activeDrawTime = new Date(data.activeDraw.draw_time).getTime();
+                    }
+                    
+                    if (data.history && data.history.length > 0) {
+                        // Setup Last Draw
+                        const last = data.history[0];
+                        document.getElementById('last-draw-id').innerText = last.cycle_number;
+                        const lastNums = last.winning_numbers ? last.winning_numbers.split(',') : ['?','?','?','?','?'];
+                        document.getElementById('last-draw-result').innerHTML = lastNums.map((n, i) => `<div class="ball ${colors[i%5]}">${n}</div>`).join('');
+                        
+                        // Setup History Table
+                        const tbody = document.getElementById('history-table');
+                        tbody.innerHTML = '';
+                        data.history.forEach(row => {
+                            const tr = document.createElement('tr');
+                            const timeStr = new Date(row.draw_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            const nums = row.winning_numbers ? row.winning_numbers.split(',') : ['?'];
+                            const balls = nums.map((n, i) => `<div class="ball ${colors[i%5]}">${n}</div>`).join('');
+                            
+                            tr.innerHTML = `
+                                <td class="py-3 px-3 text-xs text-gray-600">${row.cycle_number}</td>
+                                <td class="py-3 px-3 text-xs text-center font-medium">${timeStr}</td>
+                                <td class="py-3 px-3 text-right">
+                                    <div class="flex justify-end">${balls}</div>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load draws", err);
+            }
+        }
+
+        async function payNow() {
+            if (cart.length === 0) return showToast('Cart is empty');
+            if (!currentCycleId) return showToast('No active draw cycle found');
+
+            const token = localStorage.getItem('supabase.auth.token'); // Adjust based on your auth implementation
+            if (!token) {
+                // If not logged in, simulate Auth check failure or redirect
+                // Usually Supabase auth saves something in local storage, or we use a session cookie.
+                // For this example, we assume token is available or prompt user.
+                const storedAuth = localStorage.getItem('sb-auth-token');
+                if(!storedAuth) {
+                    showToast('Please sign in to place a bet');
+                    setTimeout(() => window.location.href='/login.html', 1500);
+                    return;
+                }
+            }
+
+            const btn = document.getElementById('pay-btn');
+            btn.innerText = 'Processing...';
+            btn.disabled = true;
+
+            let successCount = 0;
+            // Simplified: submitting bets sequentially
+            for (let item of cart) {
+                try {
+                    const res = await fetch('/api/5d/bet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('sb-auth-token')}`
+                        },
+                        body: JSON.stringify({
+                            cycle_id: currentCycleId,
+                            bet_numbers: item.numbers,
+                            bet_amount: item.amount,
+                            multiplier: item.multiplier
+                        })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        successCount++;
+                    } else {
+                        showToast(`Failed: ${data.error}`);
+                    }
+                } catch(e) {
+                    showToast('Network error while placing bet');
+                }
+            }
+
+            if (successCount > 0) {
+                showToast(`Successfully placed ${successCount} bet(s)!`);
+                clearCart();
+            }
+            
+            btn.innerText = 'Pay Now';
+            btn.disabled = false;
+        }
+
+        // --- Initialization ---
+        fetchDraws();
+        // Poll for updates every 15 seconds
+        setInterval(fetchDraws, 15000);
+
+        // Countdown Timer Loop
         setInterval(() => {
-            sec--;
-            if(sec < 0) sec = 59;
-            document.getElementById('countdown-sec').innerHTML = (sec < 10 ? '0'+sec : sec) + '<span class="time-label">SEC</span>';
+            if (!activeDrawTime) return;
+            const now = new Date().getTime();
+            const distance = activeDrawTime - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown-min').innerHTML = `00<span class="time-label">MIN</span>`;
+                document.getElementById('countdown-sec').innerHTML = `00<span class="time-label">SEC</span>`;
+                return;
+            }
+
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown-min').innerHTML = `${minutes < 10 ? '0'+minutes : minutes}<span class="time-label">MIN</span>`;
+            document.getElementById('countdown-sec').innerHTML = `${seconds < 10 ? '0'+seconds : seconds}<span class="time-label">SEC</span>`;
         }, 1000);
+
     </script>
 </body>
 </html>
