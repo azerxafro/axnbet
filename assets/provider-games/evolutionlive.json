@@ -1,0 +1,14 @@
+{
+  "data": [
+    {
+      "gameNameEn": "Evolution Lobby",
+      "gameID": "8ef39602e589bf9f32fc351b1cbb338b",
+      "customGameType": "1",
+      "vendorCode": 86,
+      "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCWqmXNet6W4ArXQ_YAFTA7kzAlznS-LNwOw&s"
+    }
+  ],
+  "code": 0,
+  "msg": "Successfully",
+  "success": true
+}
