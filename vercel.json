@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "assets/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "user/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/provider-games/:provider",
+      "destination": "/assets/provider-games/:provider.json"
+    },
+    {
+      "source": "/user/login-form",
+      "destination": "/user/login-form/index.html"
+    },
+    {
+      "source": "/user/register-form",
+      "destination": "/user/register-form/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/admin/draw",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
