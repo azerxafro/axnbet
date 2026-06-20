@@ -8,8 +8,14 @@ module.exports = async (req, res) => {
     }
 
     const { message } = req.body;
-    if (!message) {
+    const cleanMessage = message?.trim();
+
+    if (!cleanMessage) {
         return res.status(400).json({ success: false, message: 'Empty message.' });
+    }
+
+    if (cleanMessage.length > 300) {
+        return res.status(400).json({ success: false, message: 'Message too long (max 300 characters).' });
     }
 
     if (supabaseUrl === 'https://your-project.supabase.co') {
@@ -32,12 +38,29 @@ module.exports = async (req, res) => {
     }
 
     try {
+        // Rate limiting check
+        const { data: lastMsg } = await supabase
+            .from('chats')
+            .select('created_at')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+        if (lastMsg) {
+            const lastTime = new Date(lastMsg.created_at).getTime();
+            const now = Date.now();
+            if (now - lastTime < 3000) {
+                return res.status(429).json({ success: false, message: 'You are sending messages too fast. Please wait 3 seconds.' });
+            }
+        }
+
         const username = user.user_metadata?.username || 'User_' + (user.phone || '0000').slice(-4);
         
         const { error } = await supabase.from('chats').insert({
             user_id: user.id,
             username: username,
-            message: message
+            message: cleanMessage
         });
 
         if (error) throw error;

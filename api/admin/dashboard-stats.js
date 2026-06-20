@@ -41,25 +41,28 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const { count: totalUsers } = await supabaseAdmin.from('profiles').select('*', { count: 'exact', head: true });
-        
-        const { data: balanceData } = await supabaseAdmin.from('profiles').select('balance');
-        const totalBalance = balanceData?.reduce((sum, p) => sum + parseFloat(p.balance || 0), 0) || 0;
+        const [
+            { count: totalUsers },
+            { count: totalTickets },
+            { data: sumsData },
+            { data: recentTickets },
+            { data: recentChats }
+        ] = await Promise.all([
+            supabaseAdmin.from('profiles').select('*', { count: 'exact', head: true }),
+            supabaseAdmin.from('tickets').select('*', { count: 'exact', head: true }),
+            supabaseAdmin.rpc('get_dashboard_sums'),
+            supabaseAdmin.from('tickets')
+                .select('*, profiles(username), lottery_cycles(name, cycle_number)')
+                .order('created_at', { ascending: false })
+                .limit(10),
+            supabaseAdmin.from('chats')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(20)
+        ]);
 
-        const { data: betsData } = await supabaseAdmin.from('tickets').select('bet_amount');
-        const totalBetsAmount = betsData?.reduce((sum, t) => sum + parseFloat(t.bet_amount || 0), 0) || 0;
-
-        const { count: totalTickets } = await supabaseAdmin.from('tickets').select('*', { count: 'exact', head: true });
-
-        const { data: recentTickets } = await supabaseAdmin.from('tickets')
-            .select('*, profiles(username), lottery_cycles(name, cycle_number)')
-            .order('created_at', { ascending: false })
-            .limit(10);
-
-        const { data: recentChats } = await supabaseAdmin.from('chats')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(20);
+        const totalBalance = sumsData?.totalBalance || 0;
+        const totalBetsAmount = sumsData?.totalBetsAmount || 0;
 
         res.json({
             totalUsers,
