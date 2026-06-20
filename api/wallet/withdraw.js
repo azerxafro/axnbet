@@ -32,25 +32,24 @@ module.exports = async (req, res) => {
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
     try {
-        const { data: profile } = await supabaseAdmin.from('profiles').select('balance').eq('id', user.id).single();
-        
-        if (parseFloat(profile.balance) < withdrawAmt) {
-            return res.status(400).json({ success: false, message: 'Insufficient funds.' });
+        if (isNaN(withdrawAmt) || withdrawAmt <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid withdrawal amount.' });
         }
 
-        const newBalance = parseFloat(profile.balance) - withdrawAmt;
-
-        const { error: updateErr } = await supabaseAdmin.from('profiles').update({ balance: newBalance }).eq('id', user.id);
-        
-        if (updateErr) throw updateErr;
-
-        await supabaseAdmin.from('ledger_transactions').insert({
-            user_id: user.id,
-            type: 'withdrawal',
-            amount: -withdrawAmt,
-            status: 'completed',
-            reference_id: 'User Withdrawal'
+        // Pass -withdrawAmt to properly deduct
+        const { data, error } = await supabaseAdmin.rpc('process_wallet_transaction', {
+            p_user_id: user.id,
+            p_amount: -withdrawAmt,
+            p_type: 'withdrawal',
+            p_reference: 'User Withdrawal'
         });
+
+        if (error) {
+            if (error.message.includes('Insufficient funds')) {
+                return res.status(400).json({ success: false, message: 'Insufficient funds.' });
+            }
+            throw error;
+        }
 
         res.json({ success: true, message: `Withdrew ₹${withdrawAmt.toFixed(2)} successfully!` });
     } catch (err) {

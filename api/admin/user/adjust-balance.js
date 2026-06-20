@@ -33,25 +33,29 @@ module.exports = async (req, res) => {
     }
 
     try {
-        // Find user by phone
-        const { data: targetProfile } = await supabaseAdmin.from('profiles').select('id, balance').eq('phone_number', phone).single();
+        if (isNaN(adjustValue)) {
+            return res.status(400).json({ success: false, message: 'Invalid adjustment amount.' });
+        }
+
+        // Find user by phone to get their ID
+        const { data: targetProfile } = await supabaseAdmin.from('profiles').select('id').eq('phone_number', phone).single();
         if (!targetProfile) {
             return res.status(404).json({ success: false, message: `User phone ${phone} not found.` });
         }
 
-        const newBalance = parseFloat(targetProfile.balance) + adjustValue;
-
-        // Update balance
-        await supabaseAdmin.from('profiles').update({ balance: newBalance }).eq('id', targetProfile.id);
-
-        // Ledger entry
-        await supabaseAdmin.from('ledger_transactions').insert({
-            user_id: targetProfile.id,
-            type: adjustValue > 0 ? 'deposit' : 'withdrawal',
-            amount: adjustValue,
-            status: 'completed',
-            reference_id: 'Admin Adjustment'
+        const { data, error } = await supabaseAdmin.rpc('process_wallet_transaction', {
+            p_user_id: targetProfile.id,
+            p_amount: adjustValue,
+            p_type: adjustValue > 0 ? 'deposit' : 'withdrawal',
+            p_reference: 'Admin Adjustment'
         });
+
+        if (error) {
+            if (error.message.includes('Insufficient funds')) {
+                return res.status(400).json({ success: false, message: 'Insufficient funds for deduction.' });
+            }
+            throw error;
+        }
 
         res.json({ success: true, message: `Wallet balance successfully adjusted by ₹${adjustValue.toFixed(2)}.` });
     } catch (err) {

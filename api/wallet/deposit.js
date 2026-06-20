@@ -29,28 +29,27 @@ module.exports = async (req, res) => {
         return res.status(401).json({ success: false, message: 'Invalid session' });
     }
 
-    // Use service role key to bypass RLS and update balance
+    // Use service role key to bypass RLS and update balance atomically
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
     try {
-        // Fetch current balance
-        const { data: profile } = await supabaseAdmin.from('profiles').select('balance').eq('id', user.id).single();
-        const newBalance = parseFloat(profile.balance) + parseFloat(amount);
+        const depositAmt = parseFloat(amount);
+        if (isNaN(depositAmt) || depositAmt <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid deposit amount.' });
+        }
 
-        const { error: updateErr } = await supabaseAdmin.from('profiles').update({ balance: newBalance }).eq('id', user.id);
-        
-        if (updateErr) throw updateErr;
-
-        // Log transaction
-        await supabaseAdmin.from('ledger_transactions').insert({
-            user_id: user.id,
-            type: 'deposit',
-            amount: parseFloat(amount),
-            status: 'completed',
-            reference_id: 'User Deposit'
+        const { data, error } = await supabaseAdmin.rpc('process_wallet_transaction', {
+            p_user_id: user.id,
+            p_amount: depositAmt,
+            p_type: 'deposit',
+            p_reference: 'User Deposit'
         });
 
-        res.json({ success: true, message: `Deposited ₹${parseFloat(amount).toFixed(2)} successfully!` });
+        if (error) {
+            throw error;
+        }
+
+        res.json({ success: true, message: `Deposited ₹${depositAmt.toFixed(2)} successfully!` });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
