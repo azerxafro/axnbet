@@ -61,6 +61,34 @@ let activeCycles = {
     '5D': { name: '5D', price: 10, cycle: 1001 }
 };
 
+// --- Persistence Logic ---
+const dbPath = path.join(__dirname, 'database.json');
+if (fs.existsSync(dbPath)) {
+    try {
+        const data = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+        if (data.userSession) userSession = data.userSession;
+        if (data.tickets) tickets = data.tickets;
+        if (data.chats) chats = data.chats;
+        if (data.drawResults) drawResults = data.drawResults;
+        if (data.activeCycles) activeCycles = data.activeCycles;
+    } catch (e) {
+        console.error("Failed to load database.json:", e);
+    }
+}
+
+function saveState() {
+    fs.writeFileSync(dbPath, JSON.stringify({ userSession, tickets, chats, drawResults, activeCycles }, null, 2));
+}
+
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        saveState();
+    });
+    next();
+});
+// -------------------------
+
+
 // Helper to map cycle ID to Lottery details (scans all active cycles)
 function getLotteryByCycle(cycle) {
     const cycleNum = parseInt(cycle);
@@ -118,17 +146,25 @@ app.get('/user/register-form', (req, res) => {
 app.post('/user/login-form', (req, res) => {
     const { username, code, password } = req.body;
     
-    // Simulate login success
-    userSession.isAuthenticated = true;
-    userSession.phone = username || '9876543210';
-    userSession.username = 'User_' + userSession.phone.substring(6);
-    
-    res.send(`
-        <script>
-            alert("Signed in successfully as ${userSession.username}!");
-            window.location.href = '/';
-        </script>
-    `);
+    if (username === 'admin' && password === '1234') {
+        userSession.isAuthenticated = true;
+        userSession.phone = '9876543210';
+        userSession.username = 'admin';
+        
+        res.send(`
+            <script>
+                alert("Signed in successfully as ${userSession.username}!");
+                window.location.href = '/';
+            </script>
+        `);
+    } else {
+        res.send(`
+            <script>
+                alert("Invalid credentials. Please use Demo Login (Username: admin, Password: 1234)");
+                window.history.back();
+            </script>
+        `);
+    }
 });
 
 // POST /user/register-form Action Route

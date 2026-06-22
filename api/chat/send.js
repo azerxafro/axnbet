@@ -18,9 +18,7 @@ module.exports = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Message too long (max 300 characters).' });
     }
 
-    if (supabaseUrl === 'https://your-project.supabase.co') {
-        return res.json({ success: true, message: 'Message sent! (MOCK)' });
-    }
+    
 
     const authHeader = req.headers.authorization;
     if (!authHeader) {

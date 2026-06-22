@@ -10,9 +10,7 @@ module.exports = async (req, res) => {
     const { phone, amount } = req.body;
     const adjustValue = parseFloat(amount);
 
-    if (supabaseUrl === 'https://your-project.supabase.co') {
-        return res.json({ success: true, message: `Wallet balance adjusted (MOCK)` });
-    }
+    
 
     const authHeader = req.headers.authorization;
     if (!authHeader) {

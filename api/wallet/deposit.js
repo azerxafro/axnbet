@@ -9,9 +9,7 @@ module.exports = async (req, res) => {
 
     const { amount } = req.body;
 
-    if (supabaseUrl === 'https://your-project.supabase.co') {
-        return res.json({ success: true, message: `Deposited ₹${parseFloat(amount).toFixed(2)} successfully! (MOCK)` });
-    }
+    
 
     const authHeader = req.headers.authorization;
     if (!authHeader) {

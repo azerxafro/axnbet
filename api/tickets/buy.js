@@ -9,13 +9,7 @@ module.exports = async (req, res) => {
 
     const { cycle_id, numbers, amount } = req.body;
     
-    if (supabaseUrl === 'https://your-project.supabase.co') {
-        return res.json({
-            success: true,
-            message: `Successfully booked ticket with numbers [${numbers}]! (MOCK)`,
-            new_balance: 500.00 - parseFloat(amount)
-        });
-    }
+    
 
     const authHeader = req.headers.authorization;
     if (!authHeader) {

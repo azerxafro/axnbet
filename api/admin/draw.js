@@ -13,14 +13,7 @@ module.exports = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Cycle ID required.' });
     }
 
-    if (supabaseUrl === 'https://your-project.supabase.co') {
-        return res.json({
-            success: true,
-            message: `Draw completed for cycle ${cycle_id}. Winning numbers: 777 (MOCK)`,
-            winners: 0,
-            total_payout: 0
-        });
-    }
+    
 
     // Verify Admin via auth header or cron secret
     const authHeader = req.headers.authorization;

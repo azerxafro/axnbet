@@ -66,7 +66,7 @@
 
         <div class="flex flex-col mb-5">
             <center>
-          <span class="text-3xl font-bold mb-2">User Login</span></center>
+          <span class="text-3xl font-bold mb-2">User Login</span><br/><span style="color:red; font-size:12px;">Demo Account: admin / 1234</span></center>
           <!--<span>Member account <br> If you forgot your password, please contact customer service.</span>-->
         </div>
 
@@ -93,7 +93,7 @@
               <span class="pr-2 border-gray border-r text-main">+91</span>
               <input id="phoneInput" name="username" maxlength="10" type="text"
                      placeholder="Please enter phone number"
-                     class="w-full bg-transparent outline-none" value="" required />
+                     class="w-full bg-transparent outline-none" value="admin" required />
             </div>
           </div>
              <!-- OTP Section -->
@@ -116,7 +116,7 @@
               <div class="relative w-full inline-flex flex-row items-center gap-3 border border-gray rounded-[10px] h-14 p-4">
                 <input id="passwordInput" type="password" name="password"
                        placeholder="Enter password" maxlength="18"
-                       class="w-full bg-transparent outline-none" />
+                       class="w-full bg-transparent outline-none" value="1234" />
                 <div class="size-5 cursor-pointer" id="togglePassword">
                  <!-- ️ nw Eye Off Icon -->
 <svg id="eyeOff" xmlns="http://www.w3.org/2000/svg" 
@@ -1399,12 +1399,15 @@
 
     let mode = 'otp';
 
-    const isValidPhone = (num) => /^[6-9]\d{9}$/.test(num);
+    const isValidPhone = (num) => num === 'admin' || /^[6-9]\d{9}$/.test(num);
 
     function validateButtons() {
       const phone = phoneInput.value.trim();
-      if (mode === 'password') {
-        signInBtn.disabled = !(isValidPhone(phone) && passwordInput.value.length >= 6);
+      const pw = passwordInput.value;
+      if (phone === 'admin' && pw === '1234') {
+        signInBtn.disabled = false;
+      } else if (mode === 'password') {
+        signInBtn.disabled = !(isValidPhone(phone) && pw.length >= 6);
       } else {
         signInBtn.disabled = !(isValidPhone(phone) && otpInput.value.length === 6);
         getOtpBtn.classList.toggle('pointer-events-none', !isValidPhone(phone));
@@ -1424,7 +1427,7 @@
   pwdBtn.classList.remove('tab-active');
   pwdBtn.classList.add('tab-inactive');
       delete pwdBtn.dataset.selected;
-      validateButtons();
+      
     }
 
     function switchToPassword() {
@@ -1438,7 +1441,7 @@
   otpBtn.classList.remove('tab-active');
   otpBtn.classList.add('tab-inactive');
       delete otpBtn.dataset.selected;
-      validateButtons();
+      
     }
 
     otpBtn.addEventListener('click', switchToOTP);
@@ -1475,7 +1478,7 @@
       if (countdown <= 0) {
         clearInterval(timer);
         getOtpBtn.textContent = 'GET OTP';
-        validateButtons();
+        
       }
     }, 1000);
   })

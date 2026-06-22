@@ -7,16 +7,7 @@ module.exports = async (req, res) => {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    if (supabaseUrl === 'https://your-project.supabase.co') {
-        return res.json({
-            totalUsers: 1,
-            totalBalance: 500,
-            totalBetsAmount: 100,
-            totalTickets: 2,
-            recentTickets: [],
-            recentChats: []
-        });
-    }
+    
 
     const authHeader = req.headers.authorization;
     if (!authHeader) {
