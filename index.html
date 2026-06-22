@@ -1,6 +1,6 @@
+
 <html lang="en" class="" style="--status-bar-height: 0px; --nav-bar-height: 0px;">
    <head>
-      <script src="/currency.js"></script>
       <style id="react-aria-pressable-style">@layer {
          [data-react-aria-pressable] {
          touch-action: pan-x pan-y pinch-zoom;
@@ -10,7 +10,7 @@
        <title> AXN - Home</title>
         <meta name="title" Content="AXN - Home">
 
-    <meta name="description" content="AXN Agency | Best Kerala &amp; Dear 3 Digit Online Booking App">
+    <meta name="description" content="AXN Agency | Best Kerala &amp;amp; Dear  3 Digit  Online Booking App">
     <meta name="keywords" content="online lottery,state lottery,kerala lottery,color game">
     <link type="image/x-icon" href="assets/images/logoIcon/favicon.png" rel="shortcut icon">
 
@@ -21,16 +21,16 @@
     <meta name="apple-mobile-web-app-title" content="AXN - Home">
     
     <meta itemprop="name" content="AXN - Home">
-    <meta itemprop="description" content="AXN Agency | Best Kerala &amp; Dear 3 Digit  Online Booking App">
-    <meta itemprop="image" content="assets/images/seo/6a060127ed9441778778407.png">
+    <meta itemprop="description" content="AXN Agency | Best Kerala &amp;amp; Dear  3 Digit  Online Booking App">
+    <meta itemprop="image" content="https://axnagency.com/assets/images/seo/6a060127ed9441778778407.png">
     
     <meta property="og:type" content="website">
-    <meta property="og:title" content="AXN Agency | Best Kerala &amp; Dear 3 Digit Online Booking App">
-    <meta property="og:description" content="AXN Agency | Best Kerala &amp; Dear 3 Digit Online Booking App">
-    <meta property="og:image" content="assets/images/seo/6a060127ed9441778778407.png" />
+    <meta property="og:title" content="AXN Agency | Best Kerala &amp;amp; Dear  3 Digit  Online Booking App">
+    <meta property="og:description" content="AXN Agency | Best Kerala &amp;amp; Dear  3 Digit  Online Booking App">
+    <meta property="og:image" content="https://axnagency.com/assets/images/seo/6a060127ed9441778778407.png" />
     <meta property="og:image:type" content="png" />
   
-    <meta property="og:url" content="/">
+    <meta property="og:url" content="https://axnagency.com">
     
     <meta name="twitter:card" content="summary_large_image">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css">
@@ -39,8 +39,8 @@
       <script id="ss-chat" src="https://plugin-code.salesmartly.com/chat/widget/code/install.js"></script><script type="module" crossorigin="" src="assets/bz/assets/index-DUlEkQfN.js"></script>
       <!--<link rel="modulepreload" crossorigin="" href="assets/bz/assets/vendor-NBUcIHTT.js">-->
       <!--<link rel="modulepreload" crossorigin="" href="assets/bz/assets/pages-C3p7Iuo3.js">-->
-      <!--<link rel="stylesheet" crossorigin="" href="https://www.axnagency.com/assets/bz/assets/vendor-2d6kTBOk.css">-->
-      <!--<link rel="stylesheet" crossorigin="" href="https://www.axnagency.com/assets/bz/assets/pages-DU1wTZ4M.css">-->
+      <!--<link rel="stylesheet" crossorigin="" href="https://axnagency.com/assets/bz/assets/vendor-2d6kTBOk.css">-->
+      <!--<link rel="stylesheet" crossorigin="" href="https://axnagency.com/assets/bz/assets/pages-DU1wTZ4M.css">-->
       
       <link rel="modulepreload" crossorigin="" href="assets/bz/vendor.js">
       <link rel="modulepreload" crossorigin="" href="assets/bz/pages.js">
@@ -51,9 +51,10 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
+      <link rel="manifest" href="/manifest.webmanifest">
       <meta name="theme-color" content="#242727">
-      <link rel="icon" href="/assets/images/logoIcon/favicon.png" sizes="48x48">
-      <link rel="apple-touch-icon" href="/assets/images/logoIcon/logo.png">
+      <link rel="icon" href="/favicon.ico" sizes="48x48">
+      <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png">
       <!--<script src="assets/bz/js/index-utils.js?v2"></script>-->
       <style type="text/css">.lf-progress {
          -webkit-appearance: none;
@@ -508,10 +509,11 @@ function applyIsoCoupon(event){
     btn.disabled = true;
     btn.innerText = "Applying...";
 
-    fetch("/user/coupon-code",{
+    fetch("https://axnagency.com/user/coupon-code",{
         method:'POST',
         headers:{
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            'X-CSRF-TOKEN':"yU2oKh1rTLftxTQ4WmrGUfej15tz8yLhA6qQAJUx"
         },
         body: JSON.stringify({
             code: code,
@@ -620,11 +622,13 @@ document.getElementById('isoCouponModal')?.addEventListener('click',function(e){
   <div class="rw-body">
     <div class="rw-grid">
             
-              <div class="rw-day rw-locked">
+              <div class="rw-day rw-today">
+          <div class="rw-today-badge">TODAY</div>
           <div class="rw-day-label">Day 1</div>
-          <div class="rw-coin">₹</div>
+          <div class="rw-coin rw-coin-today">₹</div>
           <div class="rw-amount">1.00</div>
         </div>
+
                   
               <div class="rw-day rw-locked">
           <div class="rw-day-label">Day 2</div>
@@ -671,8 +675,8 @@ document.getElementById('isoCouponModal')?.addEventListener('click',function(e){
   <div class="rw-footer">
     <button class="rw-claim-btn"
       onclick="claimReward()"
-      disabled>
-              🔒 Please Login to Claim
+      >
+              🎁 Claim Daily Reward
           </button>
     <div class="rw-close-wrap">
       <div class="rw-close-btn" onclick="closeRewardModal()">✕</div>
@@ -951,10 +955,11 @@ function claimReward() {
     btn.disabled = true;
     btn.textContent = 'Processing...';
 
-    fetch("/user/daily-reward/claim", {
+    fetch("https://axnagency.com/user/daily-reward/claim", {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': 'yU2oKh1rTLftxTQ4WmrGUfej15tz8yLhA6qQAJUx'
         }
     })
     .then(res => res.json())
@@ -1254,8 +1259,7 @@ function startSpinShower() {
                               <div class="flex flex-col w-full bg-white dark:bg-gray relative z-40 !sticky top-0" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 16px 0px;">
                                  <div style="height: 0px;"></div>
                                  
-                                                                     
-                                 <div class="w-full h-11 flex items-center relative z-50">
+                                                                  <div class="w-full h-11 flex items-center relative z-50">
                                     <div class="absolute top-0 left-0 h-full pl-3 flex items-center rtl:left-auto rtl:right-0 rtl:pl-0 rtl:pr-3">
                                        <div class="h-full flex items-center">
                                           <div class="flex items-center">
@@ -1265,42 +1269,48 @@ function startSpinShower() {
                                                 <path d="M5 17.9746H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                                 <path d="M18.7604 11.1653C19.3594 11.5606 19.3594 12.4394 18.7604 12.8347L16.3261 14.4409C15.6613 14.8796 14.7754 14.4027 14.7754 13.6062L14.7754 10.3938C14.7754 9.59725 15.6613 9.12043 16.3261 9.55912L18.7604 11.1653Z" fill="currentColor" style="transform-origin: 1.0625rem 0.75rem;"></path>
                                              </svg>
-                                             
-                                             <img
-                                                    class="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 bg-[#0D47A1] rounded-lg size-10"
-                                                    alt="app_logo" src="assets/images/logoIcon/logo.png"
-                                                    data-loaded="true">
                                              <span class="ml-2 text-main font-black">AXN </span>
                                           </div>
                                        </div>
                                     </div>
-                                    <div class="absolute top-0 right-0 h-full pr-3 flex items-center rtl:right-auto rtl:left-0 rtl:pr-0 rtl:pl-3">
-                                       <div class="h-full flex items-center gap-2">
-                                           <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-[#F2F4FF] text-main border border-none text-xs rounded-sm h-8 px-2 font-bold focus:outline-none shadow-sm cursor-pointer hover:bg-gray-200 transition-all">
-                                               <option value="INR">INR (₹)</option>
-                                               <option value="USD">USD ($)</option>
-                                               <option value="CAD">CAD (C$)</option>
-                                               <option value="SGD">SGD (S$)</option>
-                                               <option value="AED">AED (AED)</option>
-                                           </select>
-                                           <div class="flex items-center justify-end flex-1" id="authHeaderContainer">
-                                              <button type="button" tabindex="0" data-react-aria-pressable="true" onclick="window.location.href='/user/login-form/'" class="z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 gap-2 [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none data-[hover=true]:opacity-hover bg-light-gray dark:bg-selected px-2! h-8 rounded-sm text-main text-xs font-bold">Sign In</button>
-                                              <div class="w-2"></div>
-                                              <button type="button" tabindex="0" data-react-aria-pressable="true" onclick="window.location.href='/user/register-form/'" class="z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 gap-2 [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none data-[hover=true]:opacity-hover bg-linear-primary-tb shadow-btn-primary rounded-sm text-black dark:text-gray px-2! h-8 text-xs font-bold">Sign Up</button>
-                                           </div>
-                                        </div>
-                                    </div>
+                                    
+                                   <div class="absolute top-0 right-0 h-full pr-3 flex items-center rtl:right-auto rtl:left-0 rtl:pr-0 rtl:pl-3">
+   <div class="h-full flex items-center">
+      <div class="flex items-center text-main p-1 pl-3 rounded-lg">
+         <div class="relative shadow-black/5 shadow-none rounded-none size-6 mr-2" style="max-width: fit-content;"> <img class="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-none size-full" alt="wallet" src="/png/wallet.webp" data-loaded="true"></div>
+         <div class="flex flex-col"><span class="text-sec text-10 capitalize">Balance:</span><span class="text-xs font-bold">₹ 0.00</span></div>
+         
+         
+         <div onclick="window.location.href='/user/recharge/user-recharge-channels'" class="ml-2 size-7 flex items-center justify-center rounded-md bg-linear-270 from-primary to-[var(--linear-primary-end)] shadow-btn-primary">
+            <svg class="size-3 text-black" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <rect x="1" y="5" width="10" height="2" rx="1" fill="currentColor"></rect>
+               <rect x="5" y="11" width="10" height="2" rx="1" transform="rotate(-90 5 11)" fill="currentColor"></rect>
+            </svg>
+         </div>
+         
+         
+      </div>
+   </div>
+</div>
+                                    
+                                    
                                  </div>
                               </div>
-                              
-                              <div id="downloadBar" class="flex items-center p-2 py-1 bg-linear-to-r" style="background:linear-gradient(90deg, #ff003b, #000000)"
+                                                  
+                               <div id="downloadBar" class="flex items-center p-2 py-1 bg-linear-to-r" style="background:linear-gradient(90deg, #ff003b, #000000)"
                                         bis_skin_checked="1">
                                         <div class="flex flex-1 shrink-1 overflow-hidden items-center"
                                             bis_skin_checked="1">
                                             <div class="relative shadow-black/5 shadow-none rounded-large"
                                                 style="max-width: fit-content;" bis_skin_checked="1">
+                                                
+                                                 <!--<img-->
+                                                 <!--   class="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 bg-[#0D47A1] rounded-lg size-10"-->
+                                                 <!--   alt="app_logo" src="assets/images/logoIcon/logo.png"-->
+                                                 <!--   data-loaded="true">-->
                                             </div>
                                             <div class="ml-2 rtl:ml-0 rtl:mr-2" bis_skin_checked="1">
+                                                <!--<h4 class="text-white font-bold text-sm leading-4">AXN</h4>-->
                                                 <p style="color:#ffffff;font-size:12px">
                                                     Download app to get <span>5~1000</span>Bonus</p>
                                             </div>
@@ -1310,14 +1320,13 @@ function startSpinShower() {
                                                 class="size-6 text-sec size-4.5! text-white/70!" fill="none"
                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M16.8002 7.2002L7.2002 16.8002" stroke="currentColor"
-                                                     stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                                    stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                                                 </path>
                                                 <path d="M7.2002 7.2002L16.8002 16.8002" stroke="currentColor"
-                                                     stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                                    stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                                                 </path>
                                             </svg ></div>
                                     </div>
-                                    
                               <!-- bannner---->
                               <div class="relative flex flex-col" style="margin-bottom: -20px;">
                                     <div class="slick-slider home-banner-slider relative h-36 shrink-0">
@@ -1329,6 +1338,17 @@ function startSpinShower() {
                                                     </div>
                                                     <img class="z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 w-full rounded-sm h-30 absolute left-0 top-0" alt="1054" 
                                                     src="assets/images/lottery/6a01721b98c541778479643.jpg"
+                                                    data-loaded="true"></div>
+                                                     </a>
+                                            </div>
+                                                                                    <div class="p-3">
+                                                <div class="rounded h-30 relative overflow-hidden">
+                                                     <a href="https://axnagency.com/" target="_blank" class="block w-full h-full">
+                                                    <div class="group overflow-hidden bg-content3 dark:bg-content2 pointer-events-none before:opacity-100 before:absolute before:inset-0 before:-translate-x-full before:border-t before:border-content4/30 before:bg-gradient-to-r before:from-transparent before:via-content4 dark:before:via-default-700/10 before:to-transparent after:opacity-100 after:absolute after:inset-0 after:-z-10 after:bg-content3 dark:after:bg-content2 data-[loaded=true]:pointer-events-auto data-[loaded=true]:overflow-visible data-[loaded=true]:!bg-transparent data-[loaded=true]:before:opacity-0 data-[loaded=true]:before:-z-10 data-[loaded=true]:before:animate-none data-[loaded=true]:after:opacity-0 before:animate-shimmer transition-background !duration-300 size-full rounded-sm absolute left-0 top-0 bg-gray!">
+                                                        <div class="opacity-0 group-data-[loaded=true]:opacity-100 transition-opacity motion-reduce:transition-none !duration-300"></div>
+                                                    </div>
+                                                    <img class="z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 w-full rounded-sm h-30 absolute left-0 top-0" alt="1054" 
+                                                    src="assets/images/lottery/6a01725017e511778479696.jpg"
                                                     data-loaded="true"></div>
                                                      </a>
                                             </div>
@@ -1363,7 +1383,7 @@ function startSpinShower() {
                                  <div class="sticky top-11 left-0 z-31 px-3 bg-light-gray" bis_skin_checked="1">
                                             <div class="w-full text-black" bis_skin_checked="1">
                                                 <div class="h-7.5 px-2 flex items-center bg-no-repeat bg-cover bg-light-gray"
-                                                    style="background-image: url('https://betzzgame.com/images/common/notify-carousel-bg-v2.webp');"
+                                                    style="background-image: url(&quot;https://betzzgame.com/images/common/notify-carousel-bg-v2.webp&quot;);"
                                                     bis_skin_checked="1"><svg class="size-4" viewBox="0 0 16 16"
                                                         fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <g filter="url(#filter0_i_18272_5918)">
@@ -1421,23 +1441,11 @@ function startSpinShower() {
                                                                                                     <p class="text-nowrap slide-item">
                             
                                                 <span style="color:#176BE3">
-                                                    AXN111347
+                                                    AXN233351
                                                 </span>
                             
                                                 won in
-                                                <b>Dear Lottery 6PM</b>
-                            
-                                                - ₹120.00
-                            
-                                            </p>
-                                                                                    <p class="text-nowrap slide-item">
-                            
-                                                <span style="color:#176BE3">
-                                                    AXN609681
-                                                </span>
-                            
-                                                won in
-                                                <b>Dear Lottery 6PM</b>
+                                                <b>Kerala Lottery</b>
                             
                                                 - ₹12.00
                             
@@ -1445,11 +1453,11 @@ function startSpinShower() {
                                                                                     <p class="text-nowrap slide-item">
                             
                                                 <span style="color:#176BE3">
-                                                    AXN565969
+                                                    AXN322475
                                                 </span>
                             
                                                 won in
-                                                <b>Dear Lottery 6PM</b>
+                                                <b>Kerala Lottery</b>
                             
                                                 - ₹12.00
                             
@@ -1457,47 +1465,11 @@ function startSpinShower() {
                                                                                     <p class="text-nowrap slide-item">
                             
                                                 <span style="color:#176BE3">
-                                                    AXN954141
+                                                    AXN927407
                                                 </span>
                             
                                                 won in
-                                                <b>Dear Lottery 6PM</b>
-                            
-                                                - ₹12.00
-                            
-                                            </p>
-                                                                                    <p class="text-nowrap slide-item">
-                            
-                                                <span style="color:#176BE3">
-                                                    AXN499915
-                                                </span>
-                            
-                                                won in
-                                                <b>Dear Lottery 6PM</b>
-                            
-                                                - ₹12.00
-                            
-                                            </p>
-                                                                                    <p class="text-nowrap slide-item">
-                            
-                                                <span style="color:#176BE3">
-                                                    AXN218724
-                                                </span>
-                            
-                                                won in
-                                                <b>Dear Lottery 6PM</b>
-                            
-                                                - ₹12.00
-                            
-                                            </p>
-                                                                                    <p class="text-nowrap slide-item">
-                            
-                                                <span style="color:#176BE3">
-                                                    AXN218724
-                                                </span>
-                            
-                                                won in
-                                                <b>Dear Lottery 6PM</b>
+                                                <b>Kerala Lottery</b>
                             
                                                 - ₹24.00
                             
@@ -1505,44 +1477,92 @@ function startSpinShower() {
                                                                                     <p class="text-nowrap slide-item">
                             
                                                 <span style="color:#176BE3">
-                                                    AXN218724
+                                                    AXN357450
                                                 </span>
                             
                                                 won in
-                                                <b>Dear Lottery 6PM</b>
+                                                <b>Kerala Lottery</b>
                             
-                                                - ₹36.00
+                                                - ₹120.00
                             
                                             </p>
                                                                                     <p class="text-nowrap slide-item">
                             
                                                 <span style="color:#176BE3">
-                                                    AXN725445
+                                                    AXN772490
                                                 </span>
                             
                                                 won in
-                                                <b>Dear Lottery 6PM</b>
-                            
-                                                - ₹252.00
-                            
-                                            </p>
-                                                                                    <p class="text-nowrap slide-item">
-                            
-                                                <span style="color:#176BE3">
-                                                    AXN609681
-                                                </span>
-                            
-                                                won in
-                                                <b>Dear Lottery 6PM</b>
+                                                <b>Kerala Lottery</b>
                             
                                                 - ₹12.00
+                            
+                                            </p>
+                                                                                    <p class="text-nowrap slide-item">
+                            
+                                                <span style="color:#176BE3">
+                                                    AXN509821
+                                                </span>
+                            
+                                                won in
+                                                <b>Kerala Lottery</b>
+                            
+                                                - ₹12.00
+                            
+                                            </p>
+                                                                                    <p class="text-nowrap slide-item">
+                            
+                                                <span style="color:#176BE3">
+                                                    AXN187785
+                                                </span>
+                            
+                                                won in
+                                                <b>Kerala Lottery</b>
+                            
+                                                - ₹60.00
+                            
+                                            </p>
+                                                                                    <p class="text-nowrap slide-item">
+                            
+                                                <span style="color:#176BE3">
+                                                    AXN471187
+                                                </span>
+                            
+                                                won in
+                                                <b>Kerala Lottery</b>
+                            
+                                                - ₹24.00
+                            
+                                            </p>
+                                                                                    <p class="text-nowrap slide-item">
+                            
+                                                <span style="color:#176BE3">
+                                                    AXN247669
+                                                </span>
+                            
+                                                won in
+                                                <b>Kerala Lottery</b>
+                            
+                                                - ₹24.00
+                            
+                                            </p>
+                                                                                    <p class="text-nowrap slide-item">
+                            
+                                                <span style="color:#176BE3">
+                                                    AXN174525
+                                                </span>
+                            
+                                                won in
+                                                <b>Kerala Lottery</b>
+                            
+                                                - ₹48.00
                             
                                             </p>
                                                                                                     </div>
                                                         </div>
                                                     </div>
                                                     
-                                                      <a href="https://play.google.com/store/apps/details?id=com.axnagency.app">
+                                                      <a href="https://axnagency.com/play.google.com.detailsid=com.axnagency.app/">
                                                     <button type="button" tabindex="0" 
                                                         data-react-aria-pressable="true"
                                                         class="z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-5 rounded-full bg-linear-to-b from-[#71DEFF] to-[#2954FF] px-2 gap-0 animate-scale animate-infinite scale-start-100 scale-via-120"><svg
@@ -1591,22 +1611,22 @@ function startSpinShower() {
                                                                         </rect>
                                                                     </clipPath>
                                                                     <image
-                                                                        xlink:href="/assets/bz/images/home/lottie/check-in/img_0.png">
+                                                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_0.png">
                                                                     </image>
                                                                     <image
-                                                                        xlink:href="/assets/bz/images/home/lottie/check-in/img_1.png">
+                                                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_1.png">
                                                                     </image>
                                                                     <image
-                                                                        xlink:href="/assets/bz/images/home/lottie/check-in/img_2.png">
+                                                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_2.png">
                                                                     </image>
                                                                     <image
-                                                                        xlink:href="/assets/bz/images/home/lottie/check-in/img_3.png">
+                                                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_3.png">
                                                                     </image>
                                                                     <image
-                                                                        xlink:href="/assets/bz/images/home/lottie/check-in/img_4.png">
+                                                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_4.png">
                                                                     </image>
                                                                     <image
-                                                                        xlink:href="/assets/bz/images/home/lottie/check-in/img_5.png">
+                                                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_5.png">
                                                                     </image>
                                                                     <clipPath id="__lottie_element_78">
                                                                         <path d="M0,0 L800,0 L800,800 L0,800z"></path>
@@ -1623,7 +1643,7 @@ function startSpinShower() {
                                                                         style="transform-origin:400px 400px; display:block;">
                                                                         <image width="800px" height="788px"
                                                                             preserveAspectRatio="xMidYMid slice"
-                                                                            xlink:href="/assets/bz/images/home/lottie/check-in/img_5.png">
+                                                                            xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_5.png">
                                                                         </image>
                                                                     </g>
                                                                     <!-- Calendar group -->
@@ -1635,7 +1655,7 @@ function startSpinShower() {
                                                                             style="transform-origin:400px 400px; display:block;">
                                                                             <image width="428px" height="414px"
                                                                                 preserveAspectRatio="xMidYMid slice"
-                                                                                xlink:href="/assets/bz/images/home/lottie/check-in/img_3.png"
+                                                                                xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_3.png"
                                                                                 x="186" y="193">
                                                                             </image>
                                                                         </g>
@@ -1646,7 +1666,7 @@ function startSpinShower() {
                                                                             transform="translate(305,358)">
                                                                             <image width="237px" height="190px"
                                                                                 preserveAspectRatio="xMidYMid slice"
-                                                                                xlink:href="/assets/bz/images/home/lottie/check-in/img_2.png">
+                                                                                xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_2.png">
                                                                             </image>
                                                                         </g>
                                                                         <!-- Decorative element -->
@@ -1655,7 +1675,7 @@ function startSpinShower() {
                                                                             opacity="1" style="display: block;">
                                                                             <image width="181px" height="219px"
                                                                                 preserveAspectRatio="xMidYMid slice"
-                                                                                xlink:href="/assets/bz/images/home/lottie/check-in/img_1.png">
+                                                                                xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_1.png">
                                                                             </image>
                                                                         </g>
                                                                     </g>
@@ -1664,7 +1684,7 @@ function startSpinShower() {
                                                                         style="transform-origin:168px 169px; display:block;">
                                                                         <image width="175px" height="175px"
                                                                             preserveAspectRatio="xMidYMid slice"
-                                                                            xlink:href="/assets/bz/images/home/lottie/check-in/img_0.png"
+                                                                            xlink:href="https://axnagency.com/assets/bz/images/home/lottie/check-in/img_0.png"
                                                                             x="81" y="82">
                                                                         </image>
                                                                     </g>
@@ -1763,7 +1783,7 @@ function startSpinShower() {
                                            <!--     -->
                                                 
                                            <!--     <button type="button" id="color"-->
-                                           <!--      onclick="goToPage('https://www.axnagency.com/user/game/color?cycle=1')"-->
+                                           <!--      onclick="goToPage('/user/game/color?cycle=1')"-->
 
                                             
                                            <!--         style="-->
@@ -1784,7 +1804,7 @@ function startSpinShower() {
                                            <!--     -->
                                                 
                                            <!--     <button type="button" id="dice"-->
-                                           <!--      onclick="goToPage('https://www.axnagency.com/user/game/dice?cycle=1')"-->
+                                           <!--      onclick="goToPage('/user/game/dice?cycle=1')"-->
 
                                             
                                            <!--         style="-->
@@ -1806,8 +1826,7 @@ function startSpinShower() {
                                             
                                            <!-- </div>-->
 
-                                             
-                                             
+                                                                                          
                                              <div class="mt-2">
                                                 <div id="Home_Floor_3d">
                                                    <div class="flex items-center mb-2">
@@ -1816,8 +1835,9 @@ function startSpinShower() {
                                                       <p class="text-sm font-bold text-main ml-1">KL-DEAR 3 & 4 Digit</p>
                                                    </div>
                                                    <div class="grid grid-cols-2 gap-2">
-                                                      
-                                                                                                           <button onclick="goToPage('/user/lottery/details?cycle=307')" data-draw-time="1782131220000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2 bg-linear-to-b from-[#8C5BFF] to-[#4400B1]">
+                                                     
+                              
+                                                      <button onclick="goToPage('/user/lottery/details?cycle=307')" data-draw-time="1782131220000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2 bg-linear-to-b from-[#8C5BFF] to-[#4400B1]">
                                                          <!--<div class="h-5 w-17 bg-[#EA1200] text-white font-bold text-9 absolute -left-5 top-1 flex items-center justify-center z-99 -rotate-45">5% OFF</div>-->
                                                          <div class="flex justify-between w-full items-start">
                                                             <div class="flex items-center justify-center">
@@ -1849,14 +1869,14 @@ function startSpinShower() {
                                                             <div class="flex flex-col items-end font-bold">
                                                                <p class="text-9 text-white/60 mb-0.5 relative">
                                                                    <!--<span class="text-white absolute bottom-3.5 left-0 bg-[#EA1200] px-1 py-0.5 rounded-full">-->
-                                                                        
+                                                                       
                                                                    </span><span>₹12</span>/Ticket</p>
                                                                <div class="bg-white rounded-full text-black font-bold text-xs h-5 leading-5 px-2 min-w-12.5 mt-1 uppercase">play</div>
                                                             </div>
                                                          </div>
                                                       </button>
-                                                           
-                                                                                                           <button onclick="goToPage('/user/lottery/details?cycle=308')" data-draw-time="1782138420000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2 bg-linear-to-b from-[#8C5BFF] to-[#4400B1]">
+                                                          
+                                                      <button onclick="goToPage('/user/lottery/details?cycle=308')" data-draw-time="1782138420000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2 bg-linear-to-b from-[#8C5BFF] to-[#4400B1]">
                                                          <!--<div class="h-5 w-17 bg-[#EA1200] text-white font-bold text-9 absolute -left-5 top-1 flex items-center justify-center z-99 -rotate-45">5% OFF</div>-->
                                                          <div class="flex justify-between w-full items-start">
                                                             <div class="flex items-center justify-center">
@@ -1888,32 +1908,33 @@ function startSpinShower() {
                                                             <div class="flex flex-col items-end font-bold">
                                                                <p class="text-9 text-white/60 mb-0.5 relative">
                                                                    <!--<span class="text-white absolute bottom-3.5 left-0 bg-[#EA1200] px-1 py-0.5 rounded-full">-->
-                                                                        
-                                                                   </span><span>₹100</span>/Ticket</p>
+                                                                       
+                                                                   </span><span>₹12</span>/Ticket</p>
                                                                <div class="bg-white rounded-full text-black font-bold text-xs h-5 leading-5 px-2 min-w-12.5 mt-1 uppercase">play</div>
                                                             </div>
                                                          </div>
                                                       </button>
-                                                                                                            
-                                                                                                           </div>
+                                                                                                         </div>
                                                 </div>
                                              </div>
                                              
+                                                                              
                                    <div class="mt-2">
-                                                <div id="Home_Floor_Goa">
+                                                <div id="Home_Floor_3d">
                                                    <div class="flex items-center mb-2">
                                                       <!--<div class="bg-no-repeat size-6" style="background-image: url(&quot;assets/bz/images/home/sprite-v7.webp&quot;); background-size: 23.5rem 57.125rem; background-position: -4.875rem -37.25rem;"></div>-->
-                                                       <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('game/goa.png'); background-size: contain;  background-position: center;"></div>
+                                                       <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('/game/goa.png'); background-size: contain;  background-position: center;"></div>
                                                       <p class="text-sm font-bold text-main ml-1">Goa King Lottery</p>&nbsp;
                                                       <p class="live-container live-dot"> &nbsp;&nbsp;&nbsp;&nbsp;Live</p>
                                                    </div>
                                                    <div class="grid grid-cols-2 gap-2">
-                                                      <button onclick="goToPage('/user/lottery/details?cycle=310')" data-draw-time="1782127500000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2" style="background:linear-gradient(1deg, #000000, #00fffc)">
+                                                       
+                                                      <button onclick="goToPage('/user/lottery/details?cycle=310')" data-draw-time="1782127500000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2" style="background:linear-gradient(1deg, #000000, #00fffc)">
                                                          <!--<div class="h-5 w-17 bg-[#EA1200] text-white font-bold text-9 absolute -left-5 top-1 flex items-center justify-center z-99 -rotate-45">5% OFF</div>-->
                                                          <div class="flex justify-between w-full items-start">
                                                             <div class="flex items-center justify-center">
                                                                 <img class="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-small h-13" alt="prize" src="assets/images/lottery/6a017346b2c8d1778479942.png" data-loaded="true"></div>
-                                                             
+                                                            
                                                              <div class="flex flex-col items-end justify-center">
                                                                <p class="text-9 text-white/60 font-bold">Goa King 5PM</p>
                                                                <p class="text-sm text-righ din text-white font-black">₹100</p>
@@ -1940,19 +1961,19 @@ function startSpinShower() {
                                                             <div class="flex flex-col items-end font-bold">
                                                                <p class="text-9 text-white/60 mb-0.5 relative">
                                                                    <!--<span class="text-white absolute bottom-3.5 left-0 bg-[#EA1200] px-1 py-0.5 rounded-full">-->
-                                                                        
-                                                                   </span><span>₹100</span>/Ticket</p>
+                                                                       
+                                                                   </span><span>₹10</span>/Ticket</p>
                                                                <div class="bg-white rounded-full text-black font-bold text-xs h-5 leading-5 px-2 min-w-12.5 mt-1 uppercase">play</div>
                                                             </div>
                                                          </div>
                                                       </button>
-
-                                                      <button onclick="goToPage('/user/lottery/details?cycle=311')" data-draw-time="1782134700000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2" style="background:linear-gradient(1deg, #000000, #00fffc)">
+                                                      
+                                                      <button onclick="goToPage('/user/lottery/details?cycle=311')" data-draw-time="1782134700000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2" style="background:linear-gradient(1deg, #000000, #00fffc)">
                                                          <!--<div class="h-5 w-17 bg-[#EA1200] text-white font-bold text-9 absolute -left-5 top-1 flex items-center justify-center z-99 -rotate-45">5% OFF</div>-->
                                                          <div class="flex justify-between w-full items-start">
                                                             <div class="flex items-center justify-center">
                                                                 <img class="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-small h-13" alt="prize" src="assets/images/lottery/6a0193d56d3451778488277.png" data-loaded="true"></div>
-                                                             
+                                                            
                                                              <div class="flex flex-col items-end justify-center">
                                                                <p class="text-9 text-white/60 font-bold">Goa King 7PM</p>
                                                                <p class="text-sm text-righ din text-white font-black">₹100</p>
@@ -1979,19 +2000,19 @@ function startSpinShower() {
                                                             <div class="flex flex-col items-end font-bold">
                                                                <p class="text-9 text-white/60 mb-0.5 relative">
                                                                    <!--<span class="text-white absolute bottom-3.5 left-0 bg-[#EA1200] px-1 py-0.5 rounded-full">-->
-                                                                        
-                                                                   </span><span>₹100</span>/Ticket</p>
+                                                                       
+                                                                   </span><span>₹10</span>/Ticket</p>
                                                                <div class="bg-white rounded-full text-black font-bold text-xs h-5 leading-5 px-2 min-w-12.5 mt-1 uppercase">play</div>
                                                             </div>
                                                          </div>
                                                       </button>
-
-                                                      <button onclick="goToPage('/user/lottery/details?cycle=312')" data-draw-time="1782141900000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2" style="background:linear-gradient(1deg, #000000, #00fffc)">
+                                                      
+                                                      <button onclick="goToPage('/user/lottery/details?cycle=312')" data-draw-time="1782141900000" type="button" tabindex="0" data-react-aria-pressable="true" class="z-0 group items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 min-w-20 text-small [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-default text-default-foreground data-[hover=true]:opacity-hover h-auto gap-0 opacity-100 duration-100 active:opacity-80 rounded relative flex flex-col shrink-0 overflow-hidden p-2" style="background:linear-gradient(1deg, #000000, #00fffc)">
                                                          <!--<div class="h-5 w-17 bg-[#EA1200] text-white font-bold text-9 absolute -left-5 top-1 flex items-center justify-center z-99 -rotate-45">5% OFF</div>-->
                                                          <div class="flex justify-between w-full items-start">
                                                             <div class="flex items-center justify-center">
                                                                 <img class="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-small h-13" alt="prize" src="assets/images/lottery/6a01728f934761778479759.png" data-loaded="true"></div>
-                                                             
+                                                            
                                                              <div class="flex flex-col items-end justify-center">
                                                                <p class="text-9 text-white/60 font-bold">Goa King 9PM</p>
                                                                <p class="text-sm text-righ din text-white font-black">₹100</p>
@@ -2018,8 +2039,8 @@ function startSpinShower() {
                                                             <div class="flex flex-col items-end font-bold">
                                                                <p class="text-9 text-white/60 mb-0.5 relative">
                                                                    <!--<span class="text-white absolute bottom-3.5 left-0 bg-[#EA1200] px-1 py-0.5 rounded-full">-->
-                                                                        
-                                                                   </span><span>₹100</span>/Ticket</p>
+                                                                       
+                                                                   </span><span>₹10</span>/Ticket</p>
                                                                <div class="bg-white rounded-full text-black font-bold text-xs h-5 leading-5 px-2 min-w-12.5 mt-1 uppercase">play</div>
                                                             </div>
                                                          </div>
@@ -2155,7 +2176,7 @@ function startSpinShower() {
                                                 <div id="Home_Floor_Quick_3d">
                                                    <div class="flex items-center mb-2">
                                                       <!--<div class="bg-no-repeat size-6" style="background-image: url(&quot;assets/bz/images/home/sprite-v7.webp&quot;); background-size: 23.5rem 57.125rem; background-position: -4.875rem -37.25rem;"></div>-->
-                                                       <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('game/3d.png'); background-size: contain;  background-position: center;"></div>
+                                                       <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('/game/3d.png'); background-size: contain;  background-position: center;"></div>
                                                       <p class="text-sm font-bold text-main ml-1">Quick 3Digit</p>
                                                    </div>
                                                    <div class="w-full grid grid-cols-2 gap-2 mr-2 mb-2">
@@ -2265,7 +2286,7 @@ function startSpinShower() {
         
         <div class="flex items-center mb-2">
        
-               <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('game/run.png'); background-size: contain;  background-position: center;"></div>
+               <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('/game/run.png'); background-size: contain;  background-position: center;"></div>
             <p class="text-sm font-bold text-main ml-1">Run & Guess</p>
         </div>
                                             
@@ -2282,7 +2303,7 @@ function startSpinShower() {
                                                         border-radius:12px;
                                                         overflow:hidden;
                                                         cursor:pointer;
-                                                        background-image:url('assets/images/game/69fec6667f6ee1778304614.png');
+                                                        background-image:url('https://axnagency.com/assets/images/game/69fec6667f6ee1778304614.png');
                                                          background-size:contain; 
                                                          background-color:#a4b0be; 
                                                         background-position:center;
@@ -2302,12 +2323,12 @@ function startSpinShower() {
                                                                                        
                                              
                                             <div class="mt-2">
-    <div id="Home_Floor_TenTwenty">
+    <div id="Home_Floor_Dubai">
 
         <!-- Title -->
         <div class="flex items-center mb-2">
        
-               <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('game/10g.png'); background-size: contain;  background-position: center;"></div>
+               <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('/game/10g.png'); background-size: contain;  background-position: center;"></div>
             <p class="text-sm font-bold text-main ml-1">10 + & 20+ One Game</p>
         </div>
 
@@ -2317,7 +2338,7 @@ function startSpinShower() {
             <!-- Card 1 -->
             <div class="rounded h-25 relative" onclick="goToPage('/user/tenone/lottery/details?configId=3&cycle=60')">
                 <img class="absolute left-0 top-0 size-full rounded-large"
-                     src="assets/images/lottery/6a01791e642b61778481438.jpg" >
+                     src="https://axnagency.com/assets/images/lottery/6a01791e642b61778481438.jpg" >
                 <div class="h-25 p-2 flex flex-col justify-end relative z-10">
                      <!--<p class="text-10 text-white font-bold"> 10+ One Game</p>-->
                     <div class="flex items-center justify-between">
@@ -2334,7 +2355,7 @@ function startSpinShower() {
            
             <div class="rounded h-25 relative" onclick="goToPage('/user/twentyone/lottery/details?configId=4&cycle=60')">
                 <img class="absolute left-0 top-0 size-full rounded-large"
-                     src="assets/images/lottery/6a0179002f85c1778481408.jpg">
+                     src="https://axnagency.com/assets/images/lottery/6a0179002f85c1778481408.jpg">
                 <div class="h-25 p-2 flex flex-col justify-end relative z-10">
                     <!--<p class="text-10 text-white font-bold"> 20+ One Game</p>-->
                     <div class="flex items-center justify-between">
@@ -2358,7 +2379,7 @@ function startSpinShower() {
                                                 <div id="Home_Floor_Dubai">
                                                    <div class="flex items-center mb-2">
                                                       <!--<div class="bg-no-repeat size-6" style="background-image: url(&quot;assets/bz/images/home/sprite-v7.webp&quot;); background-size: 23.5rem 57.125rem; background-position: -3.25rem -37.25rem;"></div>-->
-                                                       <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('game/dubai.png'); background-size: contain;  background-position: center;"></div>
+                                                       <div class="bg-no-repeat" style="width:30px; height:30px; background-image: url('/game/dubai.png'); background-size: contain;  background-position: center;"></div>
                                                       <p class="text-sm font-bold text-main ml-1">Dubai Lottery</p>
                                                    </div>
                                                    <div class="w-full grid grid-cols-2 gap-2 mr-2 mb-2">
@@ -2941,7 +2962,7 @@ button{
                         overlay.style.justifyContent = 'center';
                         overlay.style.zIndex = '20';
                         overlay.style.background = 'rgba(0,0,0,0.5)';
-                        overlay.innerHTML = `<img src="assets/images/lottery/closed.png" alt="Closed" style="width:200px;height:200px;object-fit:contain;opacity:0.9;">`;
+                        overlay.innerHTML = `<img src="https://axnagency.com/assets/images/lottery/closed.png" alt="Closed" style="width:200px;height:200px;object-fit:contain;opacity:0.9;">`;
                         card.appendChild(overlay);
                 
                         function updateCountdown() {
@@ -3134,8 +3155,8 @@ button{
                     
                     const gamesContainer = document.getElementById("provider-games");
                     
-                    const launchRoute = "/provider-game/launch";
-                    const baseProviderUrl = "/provider-games";
+                    const launchRoute = "https://axnagency.com/provider-game/launch";
+                    const baseProviderUrl = "https://axnagency.com/provider-games";
                     
                     const providerCache = {};
                     
@@ -3225,7 +3246,7 @@ button{
                     game.img ||
                     game.image ||
                     game.icon ||
-                    "/assets/images/logoIcon/logo.png";
+                    "https://axnagency.com/assets/images/default.png";
                     
                     const gameCode = game.gameID || game.gameCode || "";
                     
@@ -3235,7 +3256,7 @@ button{
                     
                     item.innerHTML =
                     `<div class="w-full aspect-video overflow-hidden">
-                    <img src="/${image}" class="w-full h-full object-cover">
+                    <img src="${image}" class="w-full h-full object-cover">
                     </div>`;
                     
                     if(gameCode){
@@ -3368,7 +3389,7 @@ params.set("gameCode","8ef39602e589bf9f32fc351b1cbb338b");
 params.set("provider","evolutionlive");
 params.set("gameName","Evolution Lobby");
 
-window.location.href = "/provider-game/launch?" + params.toString();
+window.location.href = "https://axnagency.com/provider-game/launch?" + params.toString();
 
 }
                     
@@ -4301,50 +4322,50 @@ document
                      
                      
                      <div class="w-full h-13 flex items-center"  >
-                        <div id="footerHomeTab" class="flex-1 flex flex-col items-center relative" onclick="window.location.href='/'">
+                        <div class="flex-1 flex flex-col items-center relative" onclick="window.location.href='/'">
                            <svg class="size-6 text-primary" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path d="M20.1909 10.2071L12.4636 3.71619C12.1545 3.4071 11.6909 3.4071 11.5364 3.71619L3.80909 10.2071C3.65455 10.3616 3.5 10.6707 3.5 10.8253V19.6344C3.5 20.098 3.80909 20.4071 4.27273 20.4071H19.7273C20.1909 20.4071 20.5 20.098 20.5 19.6344V10.8253C20.5 10.6707 20.3455 10.3616 20.1909 10.2071ZM14.1636 20.4071H9.83636V16.5241C9.83636 15.2878 10.7636 14.3605 12 14.3605C13.2364 14.3605 14.1636 15.2878 14.1636 16.5241V20.4071Z" fill="currentColor"></path>
                            </svg>
                            <span class="text-10 font-bold duration-200 mt-1 text-primary">Home</span>
                         </div>
                          
-                        <div id="footerResultTab" class="flex-1 flex flex-col items-center relative" >
+                        <div class="flex-1 flex flex-col items-center relative" onclick="window.location.href='/user/results/new-results'" >
                         
                            <svg class="size-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.75 5C2.75 3.89543 3.64543 3 4.75 3H13.8V7.19096C12.5754 8.24544 11.8 9.80716 11.8 11.55C11.8 14.7256 14.3744 17.3 17.55 17.3C17.6169 17.3 17.6836 17.2988 17.75 17.2966V19C17.75 20.1046 16.8546 21 15.75 21H4.75C3.64543 21 2.75 20.1046 2.75 19V5ZM5.5 15V13H9.5V15H5.5ZM7.5 8H5.5V10H7.5V8ZM17.25 16C19.7353 16 21.75 13.9853 21.75 11.5C21.75 9.01472 19.7353 7 17.25 7C14.7647 7 12.75 9.01472 12.75 11.5C12.75 13.9853 14.7647 16 17.25 16ZM17.9935 10.5266L17.25 8.8L16.5065 10.5266L14.6346 10.7002L16.0469 11.9409L15.6336 13.7748L17.25 12.815L18.8664 13.7748L18.4531 11.9409L19.8654 10.7002L17.9935 10.5266ZM15 4C15 3.44772 15.4477 3 16 3H19C19.5523 3 20 3.44772 20 4V6.7358C19.191 6.26783 18.2518 6 17.25 6C16.4484 6 15.6868 6.17149 15 6.47979V4Z" fill="var(--font-color-second)"></path><defs><linearGradient id="paint0_linear_6595_9720" x1="2.75" y1="12" x2="21.75" y2="12" gradientUnits="userSpaceOnUse"><stop stop-color="#0047EC"></stop><stop offset="1" stop-color="#00D0D7"></stop></linearGradient></defs></svg>
                            <span class="text-10 font-bold duration-200 mt-1">Results</span>
                         </div>
                       
-<div id="footerSpinTab" class="flex-1 flex flex-col items-center relative">
+<div class="flex-1 flex flex-col items-center relative" onclick="window.location.href='/user/game/lottery_spin'">
                             <a href="/user/game/lottery_spin" class="flex-1 flex flex-col items-center relative"
                                 style="text-decoration:none; color:inherit;">
                                 <svg viewBox="0 0 190 190" class="size-15 relative -top-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                     <!-- img_4 - spinner wheel (190x190) - spins -->
                                     <g class="ls-wheel" style="transform-origin:95px 95px;">
                                         <image width="190" height="190" x="0" y="0"
-                                            xlink:href="/assets/bz/images/home/lottie/lucky-spin/img_4.png" />
+                                            xlink:href="https://axnagency.com/assets/bz/images/home/lottie/lucky-spin/img_4.png" />
                                     </g>
                                     <!-- img_2 - pin pointer (center) -->
                                     <image width="60" height="68" x="65" y="48"
-                                        xlink:href="/assets/bz/images/home/lottie/lucky-spin/img_2.png" />
+                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/lucky-spin/img_2.png" />
                                     <!-- img_0 - coin (left-top) -->
                                     <image width="50" height="51" x="-5" y="-5"
-                                        xlink:href="/assets/bz/images/home/lottie/lucky-spin/img_0.png" />
+                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/lucky-spin/img_0.png" />
                                     <!-- img_1 - coin (right-bottom) -->
                                     <image width="40" height="43" x="150" y="147"
-                                        xlink:href="/assets/bz/images/home/lottie/lucky-spin/img_1.png" />
+                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/lucky-spin/img_1.png" />
                                     <!-- img_3 - label/text (78x30) -->
                                     <image width="78" height="30" x="56" y="150"
-                                        xlink:href="/assets/bz/images/home/lottie/lucky-spin/img_3.png" />
+                                        xlink:href="https://axnagency.com/assets/bz/images/home/lottie/lucky-spin/img_3.png" />
                                 </svg>
                                 <div class="absolute bottom-3 left-1/2"
-                                    style="background-image: url('/assets/bz/images/lucky-spin/lucky-spin-sprite.webp'); background-size: 47.25rem 28.875rem; background-position: right -1.25rem top -6.875rem; width: 4.625rem; height: 1.25rem; margin-left: -2.3125rem;"
+                                    style="background-image: url(&quot;/assets/bz/images/lucky-spin/lucky-spin-sprite.webp&quot;); background-size: 47.25rem 28.875rem; background-position: right -1.25rem top -6.875rem; width: 4.625rem; height: 1.25rem; margin-left: -2.3125rem;"
                                     bis_skin_checked="1"></div>
                             </a>
                         </div>
                         
                         
                        
-                        <div id="footerJoinMeTab" class="flex-1 flex flex-col items-center relative" onclick="window.location.href='/user/mybets-3digit'">
+                        <div class="flex-1 flex flex-col items-center relative" onclick="window.location.href='/user/mybets-3digit'">
                            <svg class="size-6 text-sec" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M11.999 2.5C12.4902 2.5 12.9616 2.6944 13.3096 3.04102L15.0078 4.73926H17.4082C17.8988 4.74019 18.3687 4.93552 18.7158 5.28223C19.0629 5.62899 19.2593 6.0992 19.2607 6.58984V8.99219L20.957 10.6895C21.1291 10.8615 21.2652 11.0662 21.3584 11.291C21.4515 11.5159 21.5 11.7566 21.5 12C21.5 12.2435 21.4516 12.485 21.3584 12.71C21.2652 12.9348 21.1292 13.1395 20.957 13.3115L19.2607 15.0078V17.4082C19.2601 17.8995 19.0642 18.3704 18.7168 18.7178C18.3694 19.0652 17.8985 19.261 17.4072 19.2617H15.0078L13.3105 20.958C13.1386 21.1305 12.9341 21.2673 12.709 21.3604C12.4839 21.4534 12.2426 21.5008 11.999 21.5C11.7558 21.5007 11.5148 21.4532 11.29 21.3604C11.0651 21.2673 10.8603 21.1304 10.6885 20.958L8.99219 19.2617H6.59277C6.10136 19.2611 5.62971 19.0653 5.28223 18.7178C4.93492 18.3704 4.73993 17.8994 4.73926 17.4082V15.0078L3.04102 13.3105C2.6944 12.9626 2.50008 12.4911 2.5 12C2.5 11.5089 2.69452 11.0375 3.04102 10.6895L4.73926 8.99219V6.58984C4.73983 6.09843 4.93479 5.62679 5.28223 5.2793C5.62971 4.93179 6.10136 4.73593 6.59277 4.73535H8.99219L10.6885 3.04102C11.0365 2.69439 11.5079 2.50001 11.999 2.5ZM9.09766 7.68066V8.92676H9.94434C10.1459 8.92676 10.3234 8.95893 10.4766 9.02344C10.6378 9.08794 10.7712 9.18081 10.876 9.30176C10.9887 9.42266 11.0615 9.56808 11.0938 9.7373H9.09766V10.9707H11.0449C11.0127 11.14 10.94 11.2853 10.8271 11.4062C10.7223 11.5271 10.5889 11.6201 10.4277 11.6846C10.2667 11.7489 10.0896 11.7812 9.89648 11.7812H9.09766V12.5791L11.4199 16.3164H14.0811L11.6621 12.7852C12.1136 12.64 12.4888 12.4138 12.7871 12.1074C13.0853 11.793 13.2868 11.414 13.3916 10.9707H14.9033V9.7373H13.4277C13.3955 9.58414 13.355 9.4388 13.3066 9.30176C13.2583 9.16468 13.1976 9.03964 13.125 8.92676H14.9033V7.68066H9.09766Z" fill="url(#paint0_linear_24698_7610)"></path>
                               <defs>
@@ -4357,7 +4378,7 @@ document
                            <span class="text-10 font-bold duration-200 mt-1">Tickets</span>
                         </div>
                       
-                        <div id="footerMeTab" class="flex-1 flex flex-col items-center relative">
+                        <div class="flex-1 flex flex-col items-center relative"  onclick="window.location.href='/user/tofactor-dashboard-new/'">
                            <svg class="size-6 text-sec" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" >
                               <path d="M12.002 3C16.9736 3 21 7.03194 21 12.001C21 16.97 16.9696 21 12 21C7.03039 21 3 16.972 3 12.001C3.00002 7.02994 7.03037 3.00003 12.002 3ZM10.2607 12.6133C9.63973 12.6133 9.11684 13.1362 9.35449 13.71C9.49837 14.0571 9.70889 14.3729 9.97461 14.6387C10.2405 14.9046 10.5569 15.1159 10.9043 15.2598C11.2516 15.4036 11.6241 15.4775 12 15.4775C12.3759 15.4775 12.7484 15.4036 13.0957 15.2598C13.443 15.1159 13.7586 14.9044 14.0244 14.6387C14.2902 14.3729 14.5016 14.0572 14.6455 13.71C14.8832 13.1362 14.3602 12.6134 13.7393 12.6133H10.2607ZM9.13672 8.93164C8.68485 8.93164 8.31836 9.29813 8.31836 9.75C8.31842 10.2018 8.68488 10.5684 9.13672 10.5684C9.58844 10.5682 9.95502 10.2017 9.95508 9.75C9.95508 9.29821 9.58847 8.93178 9.13672 8.93164ZM14.8633 8.93164C14.4115 8.9318 14.0449 9.29823 14.0449 9.75C14.045 10.2017 14.4116 10.5682 14.8633 10.5684C15.3151 10.5684 15.6816 10.2018 15.6816 9.75C15.6816 9.29813 15.3152 8.93164 14.8633 8.93164Z" fill="currentColor"></path>
                            </svg>
@@ -4374,153 +4395,54 @@ document
          </div>
       </div>
       <script>
-        // Store original home content for SPA return
-        let _homeContent = null;
-        document.addEventListener('DOMContentLoaded', function() {
-            _homeContent = document.getElementById('root').innerHTML;
-            
-            // Restore tab based on current URL path
-            const path = window.location.pathname;
-            if (path === '/user/results/index') {
-                document.getElementById('footerResultTab').click();
-            } else if (path === '/user/game/lottery_spin') {
-                document.getElementById('footerSpinTab').click();
-            } else if (path === '/chat') {
-                document.getElementById('footerJoinMeTab').click();
-            } else if (path === '/user/tofactor-dashboard-new') {
-                document.getElementById('footerMeTab').click();
-            }
-        });
-
-        // Helper to highlight active footer tab
-        function setActiveTab(activeId) {
-            ['footerHomeTab','footerResultTab','footerSpinTab','footerJoinMeTab','footerMeTab'].forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                const svg = el.querySelector('svg');
-                const span = el.querySelector('span');
-                if (id === activeId) {
-                    if (svg) svg.classList.add('text-primary');
-                    if (span) span.classList.add('text-primary');
-                } else {
-                    if (svg) svg.classList.remove('text-primary');
-                    if (span) span.classList.remove('text-primary');
+          document.getElementById("footerResultTab").addEventListener("click", function(e) {
+            e.preventDefault();
+        
+            fetch("/user/results/index", {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
                 }
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("root").innerHTML = data;
+                history.pushState({}, '', '/user/results/index');
+                   window.scrollTo(0,0); // enable scrolling again
             });
-        }
-
-        // Home Tab — restore original content
-        document.getElementById("footerHomeTab").addEventListener("click", function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (_homeContent) {
-                document.getElementById("root").innerHTML = _homeContent;
-                if (window.location.pathname !== '/') {
-                    history.pushState({}, '', '/');
-                }
-                window.scrollTo(0, 0);
-                setActiveTab('footerHomeTab');
-            } else {
-                window.location.href = '/';
-            }
         });
-
-        // Results Tab
-        document.getElementById("footerResultTab").addEventListener("click", function(e) {
-            e.preventDefault();
-            fetch("/user/results/index", { headers: { "X-Requested-With": "XMLHttpRequest" } })
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById("root").innerHTML = data;
-                    if (window.location.pathname !== '/user/results/index') {
-                        history.pushState({}, '', '/user/results/index');
-                    }
-                    window.scrollTo(0, 0);
-                    setActiveTab('footerResultTab');
-                })
-                .catch(error => console.error(error));
-        });
-
-        // Spin Tab
         document.getElementById("footerSpinTab").addEventListener("click", function(e) {
             e.preventDefault();
+        
             fetch("/user/game/lottery_spin")
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById("root").innerHTML = data;
-                    if (window.location.pathname !== '/user/game/lottery_spin') {
-                        history.pushState({}, '', '/user/game/lottery_spin');
-                    }
-                    window.scrollTo(0, 0);
-                    setActiveTab('footerSpinTab');
+                     history.pushState({}, '', '/user/game/lottery_spin');
                 })
                 .catch(error => console.error(error));
         });
-
-        // Tickets/JoinMe Tab (uses SPA nav instead of full reload)
         document.getElementById("footerJoinMeTab").addEventListener("click", function(e) {
             e.preventDefault();
-            e.stopPropagation();
+        
             fetch("/chat")
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById("root").innerHTML = data;
-                    if (window.location.pathname !== '/chat') {
-                        history.pushState({}, '', '/chat');
-                    }
-                    window.scrollTo(0, 0);
-                    setActiveTab('footerJoinMeTab');
+                     history.pushState({}, '', '/chat');
                 })
                 .catch(error => console.error(error));
         });
-
-        // Me/Profile Tab
         document.getElementById("footerMeTab").addEventListener("click", function(e) {
             e.preventDefault();
+        
             fetch("/user/tofactor-dashboard-new")
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById("root").innerHTML = data;
-                    if (window.location.pathname !== '/user/tofactor-dashboard-new') {
-                        history.pushState({}, '', '/user/tofactor-dashboard-new');
-                    }
-                    window.scrollTo(0, 0);
-                    setActiveTab('footerMeTab');
+                     history.pushState({}, '', '/user/tofactor-dashboard-new');
                 })
                 .catch(error => console.error(error));
         });
-
-        // Dynamic Header Session UI Manager
-        function updateHeaderUI() {
-            const authContainer = document.getElementById('authHeaderContainer');
-            if (authContainer && window.userSession && window.userSession.isAuthenticated) {
-                authContainer.innerHTML = `
-                    <div class="flex items-center gap-2 bg-[#F2F4FF] dark:bg-selected px-2.5 h-8 rounded-sm text-main text-xs font-bold shadow-sm">
-                        <span class="text-xs text-gray-500 font-bold truncate max-w-[80px]">👤 ${window.userSession.username}</span>
-                        <span class="text-xs text-green-600 font-extrabold">₹${window.userSession.balance.toFixed(2)}</span>
-                        <button type="button" onclick="handleSignOutHeader(event)" class="text-red-500 hover:text-red-600 ml-1 transition-colors">Sign Out</button>
-                    </div>
-                `;
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            updateHeaderUI();
-        });
-
-        window.handleSignOutHeader = function(event) {
-            if (event) event.preventDefault();
-            fetch('/api/auth/signout', { method: 'POST' })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message || "Signed out successfully!");
-                window.location.href = '/';
-            })
-            .catch(err => {
-                console.error(err);
-                window.location.href = '/';
-            });
-        };
       </script>     
  
    
@@ -4576,16 +4498,19 @@ document
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': 'EIWUxDdln9NcdZD7MnWDHXnnd4VE7fMIWcxhdu2A'
+                'X-CSRF-TOKEN': 'yU2oKh1rTLftxTQ4WmrGUfej15tz8yLhA6qQAJUx'
             },
             body: JSON.stringify({ android_info_id: visitorId, udid: visitorId, device_token: token })
         });
     }
 
 
-    // 3. Handle Foreground Messages (When user is currently on the site)
+    <!--// 3. Handle Foreground Messages (When user is currently on the site)-->
     messaging.onMessage((payload) => {
-        console.log('Message received: ', payload);
+        console.log('Message received. ', payload);
+        <!--alert(`${payload.notification.title}: ${payload.notification.body}`);-->
+        console.log('Message received. ', payload);
+console.log('Message received. ', payload);
  const notificationSound = new Audio('notification.wav');
     notificationSound.preload = 'auto';
 // 2. Play the sound with a 'catch' to prevent errors
@@ -4626,5 +4551,155 @@ document
     // Start the process
     initFirebaseMessaging();
 </script>
-     </body>
+     
+      <script>
+        // Store original home content for SPA return
+        let _homeContent = null;
+        document.addEventListener('DOMContentLoaded', function() {
+            _homeContent = document.getElementById('root').innerHTML;
+            
+            // Sync UI with user session
+            if (window.userSession && window.userSession.isAuthenticated) {
+                // Find the balance element and update it
+                const balanceElements = document.querySelectorAll('.text-xs.font-bold');
+                balanceElements.forEach(el => {
+                    if (el.textContent.includes('₹')) {
+                        el.textContent = '₹ ' + window.userSession.balance.toFixed(2);
+                    }
+                });
+            } else {
+                // If not logged in, redirect clicks on wallet to login
+                const rechargeBtn = document.querySelector('[onclick*="/user/recharge"]');
+                if (rechargeBtn) {
+                    rechargeBtn.setAttribute('onclick', 'window.location.href="/user/login-form"');
+                }
+            }
+            
+            // Restore tab based on current URL path
+            const path = window.location.pathname;
+            if (path === '/user/results/index') {
+                document.getElementById('footerResultTab').click();
+            } else if (path === '/user/game/lottery_spin') {
+                // document.getElementById('footerSpinTab').click(); // Adjust if spin tab is defined
+            } else if (path === '/chat') {
+                // document.getElementById('footerJoinMeTab').click();
+            } else if (path === '/user/tofactor-dashboard-new') {
+                // document.getElementById('footerMeTab').click();
+            }
+        });
+
+        // Helper to highlight active footer tab
+        function setActiveTab(activeId) {
+            ['footerHomeTab','footerResultTab','footerSpinTab','footerJoinMeTab','footerMeTab'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const svg = el.querySelector('svg');
+                const span = el.querySelector('span');
+                if (id === activeId) {
+                    if (svg) svg.classList.add('text-primary');
+                    if (span) span.classList.add('text-primary');
+                } else {
+                    if (svg) svg.classList.remove('text-primary');
+                    if (span) span.classList.remove('text-primary');
+                }
+            });
+        }
+
+        // Add event listeners for the footer navigation to avoid page reloads
+        setTimeout(() => {
+            const homeTab = document.querySelector('[onclick="window.location.href='/'"]');
+            if (homeTab) {
+                homeTab.id = "footerHomeTab";
+                homeTab.removeAttribute('onclick');
+                homeTab.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (_homeContent) {
+                        document.getElementById("root").innerHTML = _homeContent;
+                        if (window.location.pathname !== '/') {
+                            history.pushState({}, '', '/');
+                        }
+                        window.scrollTo(0, 0);
+                        setActiveTab('footerHomeTab');
+                        
+                        // Re-apply balance
+                        if (window.userSession && window.userSession.isAuthenticated) {
+                            const balanceElements = document.querySelectorAll('.text-xs.font-bold');
+                            balanceElements.forEach(el => {
+                                if (el.textContent.includes('₹')) {
+                                    el.textContent = '₹ ' + window.userSession.balance.toFixed(2);
+                                }
+                            });
+                        }
+                    } else {
+                        window.location.href = '/';
+                    }
+                });
+            }
+
+            const resultTab = document.querySelector('[onclick="window.location.href='/user/results/new-results'"]');
+            if (resultTab) {
+                resultTab.id = "footerResultTab";
+                resultTab.removeAttribute('onclick');
+                resultTab.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    fetch("/user/results/index", { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById("root").innerHTML = data;
+                            if (window.location.pathname !== '/user/results/index') {
+                                history.pushState({}, '', '/user/results/index');
+                            }
+                            window.scrollTo(0, 0);
+                            setActiveTab('footerResultTab');
+                        })
+                        .catch(error => console.error(error));
+                });
+            }
+
+            const spinTab = document.querySelector('[onclick="window.location.href='/user/game/lottery_spin'"]');
+            if (spinTab) {
+                spinTab.id = "footerSpinTab";
+                spinTab.removeAttribute('onclick');
+                spinTab.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    fetch("/user/game/lottery_spin")
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById("root").innerHTML = data;
+                            if (window.location.pathname !== '/user/game/lottery_spin') {
+                                history.pushState({}, '', '/user/game/lottery_spin');
+                            }
+                            window.scrollTo(0, 0);
+                            setActiveTab('footerSpinTab');
+                        })
+                        .catch(error => console.error(error));
+                });
+            }
+
+            const meTab = document.querySelector('[onclick="window.location.href='/user/tofactor-dashboard-new/'"]');
+            if (meTab) {
+                meTab.id = "footerMeTab";
+                meTab.removeAttribute('onclick');
+                meTab.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    fetch("/user/tofactor-dashboard-new")
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById("root").innerHTML = data;
+                            if (window.location.pathname !== '/user/tofactor-dashboard-new') {
+                                history.pushState({}, '', '/user/tofactor-dashboard-new');
+                            }
+                            window.scrollTo(0, 0);
+                            setActiveTab('footerMeTab');
+                        })
+                        .catch(error => console.error(error));
+                });
+            }
+        }, 500);
+
+      </script>
+
+</body>
 </html>
+   
