@@ -65,7 +65,9 @@
             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
             <h1 class="text-lg font-bold">4 & 5 Digit Game</h1>
         </div>
-        <button onclick="window.location.href='/login.html'" class="btn-green px-4 py-1.5 rounded-lg font-bold text-sm">Sign In</button>
+        <div id="auth-header-container">
+            <button onclick="window.location.href='/user/login-form/'" class="btn-green px-4 py-1.5 rounded-lg font-bold text-sm">Sign In</button>
+        </div>
     </div>
     
     <!-- Announcement -->
@@ -341,21 +343,57 @@
             }
         }
 
+        function updateAuthUI() {
+            const container = document.getElementById('auth-header-container');
+            if (!container) return;
+
+            if (window.userSession && window.userSession.isAuthenticated) {
+                container.innerHTML = `
+                    <div class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">
+                        <span class="text-gray-500">👤 ${window.userSession.username}</span>
+                        <span class="text-green-600">₹${window.userSession.balance.toFixed(2)}</span>
+                        <button onclick="handleSignOut(event)" class="text-red-500 hover:text-red-600 ml-1 transition-colors">Sign Out</button>
+                    </div>
+                `;
+            } else {
+                const token = localStorage.getItem('supabase.auth.token') || localStorage.getItem('sb-auth-token');
+                if (token) {
+                    container.innerHTML = `
+                        <div class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">
+                            <span class="text-gray-500">👤 Signed In</span>
+                            <button onclick="handleSignOut(event)" class="text-red-500 hover:text-red-600 ml-1 transition-colors">Sign Out</button>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <button onclick="window.location.href='/user/login-form/'" class="btn-green px-4 py-1.5 rounded-lg font-bold text-sm">Sign In</button>
+                    `;
+                }
+            }
+        }
+
+        window.handleSignOut = function(event) {
+            if (event) event.preventDefault();
+            localStorage.removeItem('supabase.auth.token');
+            localStorage.removeItem('sb-auth-token');
+            fetch('/api/auth/signout', { method: 'POST' })
+            .finally(() => {
+                alert("Signed out successfully!");
+                window.location.href = '/';
+            });
+        };
+
         async function payNow() {
             if (cart.length === 0) return showToast('Cart is empty');
             if (!currentCycleId) return showToast('No active draw cycle found');
 
-            const token = localStorage.getItem('supabase.auth.token'); // Adjust based on your auth implementation
-            if (!token) {
-                // If not logged in, simulate Auth check failure or redirect
-                // Usually Supabase auth saves something in local storage, or we use a session cookie.
-                // For this example, we assume token is available or prompt user.
-                const storedAuth = localStorage.getItem('sb-auth-token');
-                if(!storedAuth) {
-                    showToast('Please sign in to place a bet');
-                    setTimeout(() => window.location.href='/login.html', 1500);
-                    return;
-                }
+            const isMock = window.userSession && window.userSession.isAuthenticated;
+            const token = localStorage.getItem('supabase.auth.token') || localStorage.getItem('sb-auth-token');
+
+            if (!isMock && !token) {
+                showToast('Please sign in to place a bet');
+                setTimeout(() => window.location.href='/user/login-form/', 1500);
+                return;
             }
 
             const btn = document.getElementById('pay-btn');
@@ -363,15 +401,16 @@
             btn.disabled = true;
 
             let successCount = 0;
-            // Simplified: submitting bets sequentially
             for (let item of cart) {
                 try {
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (token) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                    }
+
                     const res = await fetch('/api/5d/bet', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('sb-auth-token')}`
-                        },
+                        headers: headers,
                         body: JSON.stringify({
                             cycle_id: currentCycleId,
                             bet_numbers: item.numbers,
@@ -382,8 +421,11 @@
                     const data = await res.json();
                     if (data.success) {
                         successCount++;
+                        if (isMock && data.new_balance !== undefined) {
+                            window.userSession.balance = data.new_balance;
+                        }
                     } else {
-                        showToast(`Failed: ${data.error}`);
+                        showToast(`Failed: ${data.error || data.message}`);
                     }
                 } catch(e) {
                     showToast('Network error while placing bet');
@@ -393,6 +435,7 @@
             if (successCount > 0) {
                 showToast(`Successfully placed ${successCount} bet(s)!`);
                 clearCart();
+                updateAuthUI();
             }
             
             btn.innerText = 'Pay Now';
@@ -400,6 +443,7 @@
         }
 
         // --- Initialization ---
+        updateAuthUI();
         fetchDraws();
         // Poll for updates every 15 seconds
         setInterval(fetchDraws, 15000);

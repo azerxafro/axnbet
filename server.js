@@ -11,6 +11,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// GET /5d.html dynamic session injector
+app.get('/5d.html', (req, res) => {
+    try {
+        let html = fs.readFileSync(path.join(__dirname, '5d.html'), 'utf8');
+        const sessionScript = `<script>window.userSession = ${JSON.stringify(userSession)};</script>`;
+        html = html.replace('<head>', '<head>\n      ' + sessionScript);
+        res.send(html);
+    } catch (err) {
+        res.sendFile(path.join(__dirname, '5d.html'));
+    }
+});
+
 // Serve static assets from the root directory
 app.use(express.static(path.join(__dirname)));
 
@@ -31,6 +43,7 @@ let chats = [
 
 // Draw Results State (Starts with historical data, appends live draws)
 let drawResults = [
+    { name: '5D', cycle: 1000, numbers: '2,4,1,7,8', time: 'Yesterday, 8:15 PM' },
     { name: 'Dear Lottery 8PM', cycle: 267, numbers: '357', time: 'Yesterday, 8:00 PM' },
     { name: 'Goa King Lottery', cycle: 270, numbers: '902', time: 'Yesterday, 7:00 PM' },
     { name: 'Dubai 3Digit Lottery', cycle: 59, numbers: '148', time: 'Yesterday, 6:00 PM' }
@@ -44,7 +57,8 @@ let activeCycles = {
     'Dubai 3Digit Lottery': { name: 'Dubai 3Digit Lottery', price: 200, cycle: 60 },
     'Quick3D 3Min': { name: 'Quick3D 3Min', price: 50, cycle: 3 },
     'Quick3D 5Min': { name: 'Quick3D 5Min', price: 50, cycle: 5 },
-    'Run Guess': { name: 'Run Guess', price: 50, cycle: 88 }
+    'Run Guess': { name: 'Run Guess', price: 50, cycle: 88 },
+    '5D': { name: '5D', price: 10, cycle: 1001 }
 };
 
 // Helper to map cycle ID to Lottery details (scans all active cycles)
@@ -1046,6 +1060,71 @@ app.post('/api/tickets/buy', (req, res) => {
     });
 });
 
+// Mock 5D Game active cycle & history endpoint
+app.get('/api/5d/draw', (req, res) => {
+    const now = Date.now();
+    const drawInterval = 120000;
+    const nextDrawTimestamp = Math.ceil(now / drawInterval) * drawInterval;
+    
+    const activeDraw = {
+        id: activeCycles['5D'].cycle,
+        name: '5D',
+        cycle_number: activeCycles['5D'].cycle,
+        draw_time: new Date(nextDrawTimestamp).toISOString(),
+        status: 'open'
+    };
+
+    const history = drawResults
+        .filter(r => r.name === '5D')
+        .map(r => ({
+            cycle_number: r.cycle,
+            winning_numbers: r.numbers,
+            draw_time: r.time
+        }));
+
+    res.json({
+        success: true,
+        activeDraw,
+        history
+    });
+});
+
+// Mock 5D Game bet submission endpoint
+app.post('/api/5d/bet', (req, res) => {
+    const { cycle_id, bet_numbers, bet_amount, multiplier } = req.body;
+
+    if (!userSession.isAuthenticated) {
+        return res.status(401).json({ success: false, error: 'Please sign in first to place a bet.' });
+    }
+
+    const pricePerTicket = parseFloat(bet_amount) || 10;
+    const count = parseInt(multiplier) || 1;
+    const totalCost = pricePerTicket * count;
+
+    if (userSession.balance < totalCost) {
+        return res.status(400).json({ success: false, error: 'Insufficient wallet balance.' });
+    }
+
+    userSession.balance -= totalCost;
+    
+    const newTicket = {
+        id: tickets.length + 1,
+        lotteryName: '5D',
+        cycle: cycle_id,
+        numbers: bet_numbers,
+        amount: totalCost,
+        status: 'pending',
+        date: new Date().toLocaleString()
+    };
+    tickets.unshift(newTicket);
+
+    res.json({
+        success: true,
+        message: 'Ticket purchased successfully (Local Simulation).',
+        new_balance: userSession.balance
+    });
+});
+
 // Verify / Login Form Endpoint
 app.post('/user/lottery_spin.html', (req, res) => {
     const { username, code, password } = req.body;
@@ -1199,7 +1278,18 @@ function executeDraw(cycleId, specificNumbers = null) {
     const lottery = getLotteryByCycle(cycleId);
     
     // 1. Determine Winning numbers
-    const winningNumbers = specificNumbers || Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    let winningNumbers = specificNumbers;
+    if (!winningNumbers) {
+        if (lottery.name === '5D') {
+            const generateNumber = () => Math.floor(Math.random() * 10);
+            winningNumbers = [
+                generateNumber(), generateNumber(), generateNumber(),
+                generateNumber(), generateNumber()
+            ].join(',');
+        } else {
+            winningNumbers = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        }
+    }
     
     // 2. Scan tickets and calculate wins
     let winnersCount = 0;
@@ -1212,6 +1302,29 @@ function executeDraw(cycleId, specificNumbers = null) {
                 if (t.numbers === drawVal) {
                     t.status = 'win';
                     const payout = t.amount * 1.9;
+                    userSession.balance += payout;
+                    winnersCount++;
+                    totalPayout += payout;
+                } else {
+                    t.status = 'lose';
+                }
+            } else if (lottery.name === '5D') {
+                const betNums = t.numbers.split(',');
+                const winNums = winningNumbers.split(',');
+                let isWin = false;
+                let multiplier = 90;
+                
+                if (betNums.length === 4) {
+                    isWin = (t.numbers === winNums.slice(0, 4).join(','));
+                    multiplier = 2000;
+                } else if (betNums.length === 5) {
+                    isWin = (t.numbers === winningNumbers);
+                    multiplier = 15000;
+                }
+                
+                if (isWin) {
+                    t.status = 'win';
+                    const payout = t.amount * multiplier;
                     userSession.balance += payout;
                     winnersCount++;
                     totalPayout += payout;
