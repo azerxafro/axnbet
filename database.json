@@ -3,9 +3,19 @@
     "isAuthenticated": true,
     "phone": "9876543210",
     "username": "admin",
-    "balance": 605
+    "balance": 10600
   },
-  "tickets": [],
+  "tickets": [
+    {
+      "id": "TXN830282",
+      "cycle_id": "Gates of Olympus",
+      "numbers": "WIN",
+      "amount": 100,
+      "payout": 500,
+      "status": "completed",
+      "date": "6/28/2026 8:45:45 AM"
+    }
+  ],
   "chats": [
     {
       "username": "Lottery_King",
@@ -24,6 +34,246 @@
     }
   ],
   "drawResults": [
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 333,
+      "numbers": "688",
+      "time": "8:33:43 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 332,
+      "numbers": "648",
+      "time": "8:31:43 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 320,
+      "numbers": "410",
+      "time": "8:29:42 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 319,
+      "numbers": "483",
+      "time": "8:27:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 331,
+      "numbers": "765",
+      "time": "8:25:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 325,
+      "numbers": "206",
+      "time": "8:23:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 330,
+      "numbers": "850",
+      "time": "8:21:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 324,
+      "numbers": "397",
+      "time": "8:19:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 329,
+      "numbers": "345",
+      "time": "8:17:43 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 323,
+      "numbers": "802",
+      "time": "8:15:51 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 328,
+      "numbers": "677",
+      "time": "8:13:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 327,
+      "numbers": "118",
+      "time": "8:11:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 326,
+      "numbers": "219",
+      "time": "8:09:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 322,
+      "numbers": "771",
+      "time": "8:07:42 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 318,
+      "numbers": "462",
+      "time": "8:05:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 325,
+      "numbers": "282",
+      "time": "8:03:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 324,
+      "numbers": "863",
+      "time": "8:01:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 323,
+      "numbers": "968",
+      "time": "7:59:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 322,
+      "numbers": "026",
+      "time": "7:57:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 321,
+      "numbers": "112",
+      "time": "7:55:42 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 317,
+      "numbers": "658",
+      "time": "7:53:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 320,
+      "numbers": "117",
+      "time": "7:51:42 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 316,
+      "numbers": "470",
+      "time": "7:49:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 321,
+      "numbers": "455",
+      "time": "7:47:47 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 315,
+      "numbers": "702",
+      "time": "7:45:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 319,
+      "numbers": "735",
+      "time": "7:43:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 318,
+      "numbers": "317",
+      "time": "7:41:42 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 314,
+      "numbers": "597",
+      "time": "7:39:42 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 313,
+      "numbers": "682",
+      "time": "7:37:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 320,
+      "numbers": "401",
+      "time": "7:35:42 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 312,
+      "numbers": "300",
+      "time": "7:33:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 319,
+      "numbers": "240",
+      "time": "7:31:42 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 311,
+      "numbers": "347",
+      "time": "7:29:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 318,
+      "numbers": "236",
+      "time": "7:27:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 317,
+      "numbers": "170",
+      "time": "7:25:42 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 316,
+      "numbers": "020",
+      "time": "7:23:42 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 317,
+      "numbers": "553",
+      "time": "7:21:41 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 316,
+      "numbers": "358",
+      "time": "7:19:41 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 315,
+      "numbers": "406",
+      "time": "7:17:41 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 315,
+      "numbers": "994",
+      "time": "7:15:41 AM"
+    },
     {
       "name": "Dear Lottery 8PM",
       "cycle": 314,
@@ -149,17 +399,68 @@
     "Dear Lottery 6PM": {
       "name": "Dear Lottery 6PM",
       "price": 12,
-      "cycle": 315
+      "cycle": 334
     },
     "Dear Lottery 8PM": {
       "name": "Dear Lottery 8PM",
       "price": 12,
-      "cycle": 315
+      "cycle": 326
     },
     "Kerala Lottery 3PM": {
       "name": "Kerala Lottery 3PM",
       "price": 12,
-      "cycle": 311
+      "cycle": 321
     }
+  },
+  "users": [
+    {
+      "username": "admin",
+      "phone": "9876543210",
+      "password": "1234",
+      "balance": 10200,
+      "referBy": null
+    },
+    {
+      "username": "User_9999",
+      "phone": "9999999999",
+      "password": "password123",
+      "balance": 500,
+      "referBy": "admin"
+    },
+    {
+      "username": "User_2706",
+      "phone": "9524182706",
+      "password": "password123",
+      "balance": 500,
+      "referBy": "admin"
+    }
+  ],
+  "referralLogs": {
+    "admin": [
+      {
+        "username": "User_DemoRef1",
+        "phone": "9876543211",
+        "date": "Yesterday",
+        "bonus": 100
+      },
+      {
+        "username": "User_DemoRef2",
+        "phone": "9876543212",
+        "date": "Today",
+        "bonus": 100
+      },
+      {
+        "username": "User_9999",
+        "phone": "9999999999",
+        "date": "6/28/2026",
+        "bonus": 100
+      },
+      {
+        "username": "User_2706",
+        "phone": "9524182706",
+        "date": "6/28/2026",
+        "bonus": 100
+      }
+    ]
   }
 }

@@ -125,11 +125,24 @@
     let isSpinning = false;
     let currentRotation = 0;
 
-    // Load initial user balance
+    // Load initial user balance from server session API
     function loadBalance() {
-      if (window.userSession) {
-        document.getElementById('spinBalance').textContent = '₹' + window.userSession.balance.toFixed(2);
-      }
+      fetch('/api/session')
+        .then(res => res.json())
+        .then(session => {
+          window.userSession = session;
+          if (session && session.isAuthenticated) {
+            document.getElementById('spinBalance').textContent = '₹' + session.balance.toFixed(2);
+          } else {
+            document.getElementById('spinBalance').textContent = '₹0.00';
+          }
+        })
+        .catch(err => {
+          console.error("Failed to load session balance:", err);
+          if (window.userSession) {
+            document.getElementById('spinBalance').textContent = '₹' + window.userSession.balance.toFixed(2);
+          }
+        });
     }
     loadBalance();
 
@@ -167,28 +180,16 @@
           window.userSession.balance = new_balance;
         }
 
-        // Calculate rotation target
-        // Wheel segments:
-        // Index 0: ₹10
-        // Index 1: ₹50
-        // Index 2: ₹100
-        // Index 3: ₹500
-        // Index 4: ₹1000
-        // Index 5: Try Again
-        // Index 6: ₹25
-        // Index 7: ₹75
-        // Angle offsets:
-        // Sector width = 360 / 8 = 45 degrees
-        // Target angle lands in center of winning sector
-        // Segment indexes are clockwise on the wheel, but wheel rotates counter-clockwise.
+        // Calculate compounding rotation target
         const sectorWidth = 45;
         const targetSectorAngle = prize.index * sectorWidth;
         
-        // Let's add 5 full spins (1800 deg) for visual excitement!
-        const totalSpins = 5;
-        const finalAngle = (totalSpins * 360) - targetSectorAngle;
+        // Compound the rotation so it keeps spinning clockwise smoothly
+        const currentRelative = currentRotation % 360;
+        let diff = (360 - targetSectorAngle) - currentRelative;
+        if (diff <= 0) diff += 360;
         
-        currentRotation = finalAngle;
+        currentRotation += (5 * 360) + diff;
         
         const wheel = document.getElementById('spinWheel');
         wheel.style.transform = `rotate(${currentRotation}deg)`;

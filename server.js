@@ -11,6 +11,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// GET / dynamic session injector
+app.get('/', (req, res) => {
+    try {
+        let html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+        const sessionScript = `<script>window.userSession = ${JSON.stringify(userSession)};</script>`;
+        html = html.replace('<head>', '<head>\n      ' + sessionScript);
+        res.send(html);
+    } catch (err) {
+        res.sendFile(path.join(__dirname, 'index.html'));
+    }
+});
+
 // GET /5d.html dynamic session injector
 app.get('/5d.html', (req, res) => {
     try {
@@ -32,6 +44,16 @@ let userSession = {
     phone: null,
     username: 'Guest_User',
     balance: 500.00, // Starts with ₹500 free demo balance
+};
+
+let users = [
+    { username: 'admin', phone: '9876543210', password: '1234', balance: 10000.00, referBy: null }
+];
+let referralLogs = {
+    'admin': [
+        { username: 'User_DemoRef1', phone: '9876543211', date: 'Yesterday', bonus: 100.00 },
+        { username: 'User_DemoRef2', phone: '9876543212', date: 'Today', bonus: 100.00 }
+    ]
 };
 
 let tickets = [];
@@ -65,13 +87,15 @@ if (fs.existsSync(dbPath)) {
         if (data.chats) chats = data.chats;
         if (data.drawResults) drawResults = data.drawResults;
         if (data.activeCycles) activeCycles = data.activeCycles;
+        if (data.users) users = data.users;
+        if (data.referralLogs) referralLogs = data.referralLogs;
     } catch (e) {
         console.error("Failed to load database.json:", e);
     }
 }
 
 function saveState() {
-    fs.writeFileSync(dbPath, JSON.stringify({ userSession, tickets, chats, drawResults, activeCycles }, null, 2));
+    fs.writeFileSync(dbPath, JSON.stringify({ userSession, tickets, chats, drawResults, activeCycles, users, referralLogs }, null, 2));
 }
 
 app.use((req, res, next) => {
@@ -137,13 +161,16 @@ app.get('/user/register-form', (req, res) => {
 });
 
 // POST /user/login-form Action Route
+// POST /user/login-form Action Route
 app.post('/user/login-form', (req, res) => {
-    const { username, code, password } = req.body;
+    const { username, password } = req.body;
     
-    if (username === 'admin' && password === '1234') {
+    const user = users.find(u => (u.username === username || u.phone === username) && u.password === password);
+    if (user) {
         userSession.isAuthenticated = true;
-        userSession.phone = '9876543210';
-        userSession.username = 'admin';
+        userSession.phone = user.phone;
+        userSession.username = user.username;
+        userSession.balance = user.balance;
         
         res.send(`
             <script>
@@ -154,7 +181,7 @@ app.post('/user/login-form', (req, res) => {
     } else {
         res.send(`
             <script>
-                alert("Invalid credentials. Please use Demo Login (Username: admin, Password: 1234)");
+                alert("Invalid username or password. Please try again.");
                 window.history.back();
             </script>
         `);
@@ -164,11 +191,46 @@ app.post('/user/login-form', (req, res) => {
 // POST /user/register-form Action Route
 app.post('/user/register-form', (req, res) => {
     const { mobile, password, referBy } = req.body;
+    const username = 'User_' + mobile.substring(6);
     
-    // Simulate register & login success
-    userSession.isAuthenticated = true;
-    userSession.phone = mobile || '9876543210';
-    userSession.username = 'User_' + userSession.phone.substring(6);
+    let existing = users.find(u => u.phone === mobile || u.username === username);
+    if (!existing) {
+        let newUser = {
+            username: username,
+            phone: mobile,
+            password: password,
+            balance: 500.00, // Starts with ₹500 free demo balance
+            referBy: referBy || null
+        };
+        users.push(newUser);
+        
+        // Handle referral commission credit!
+        if (referBy) {
+            let referrer = users.find(u => u.username === referBy || u.phone === referBy);
+            if (referrer) {
+                referrer.balance += 100.00;
+                if (!referralLogs[referrer.username]) {
+                    referralLogs[referrer.username] = [];
+                }
+                referralLogs[referrer.username].push({
+                    username: username,
+                    phone: mobile,
+                    date: new Date().toLocaleDateString(),
+                    bonus: 100.00
+                });
+            }
+        }
+        
+        userSession.isAuthenticated = true;
+        userSession.phone = mobile;
+        userSession.username = username;
+        userSession.balance = newUser.balance;
+    } else {
+        userSession.isAuthenticated = true;
+        userSession.phone = existing.phone;
+        userSession.username = existing.username;
+        userSession.balance = existing.balance;
+    }
     
     res.send(`
         <script>
@@ -213,6 +275,132 @@ app.post('/api/game/spin', (req, res) => {
         prize: win,
         new_balance: userSession.balance
     });
+});
+
+// GET /api/session
+app.get('/api/session', (req, res) => {
+    res.json(userSession);
+});
+
+// POST /api/firebase-signin
+app.post('/api/firebase-signin', (req, res) => {
+    const { email, displayName, uid } = req.body;
+    
+    // Find or create Firebase user in users database
+    let user = users.find(u => u.phone === email || u.username === displayName);
+    if (!user) {
+        user = {
+            username: displayName || 'User_' + uid.substring(0, 5),
+            phone: email || 'firebase_' + uid.substring(0, 5),
+            password: 'firebase_auth_login_only',
+            balance: 500.00, // Starts with ₹500 free demo balance
+            referBy: null
+        };
+        users.push(user);
+    }
+    
+    userSession.isAuthenticated = true;
+    userSession.phone = user.phone;
+    userSession.username = user.username;
+    userSession.balance = user.balance;
+    
+    res.json({ success: true, userSession });
+});
+
+// GET /user/affiliate/dashboard Dynamic Page Fragment
+app.get('/user/affiliate/dashboard', (req, res) => {
+    if (!userSession.isAuthenticated) {
+        return res.sendFile(path.join(__dirname, 'user', 'login-form', 'index.html'));
+    }
+    
+    const referrer = userSession.username;
+    const logs = referralLogs[referrer] || [];
+    const totalReferrals = logs.length;
+    const totalEarnings = logs.reduce((sum, item) => sum + item.bonus, 0);
+    const refLink = `http://${req.headers.host}/user/register-form?ref=${referrer}`;
+    
+    let logsHTML = logs.map(l => {
+        const maskedPhone = l.phone.substring(0, 3) + '****' + l.phone.substring(7);
+        return `
+            <div class="flex justify-between items-center py-3 border-b border-purple-500/10 text-sm">
+                <div class="flex flex-col">
+                    <span class="text-white font-bold">${l.username}</span>
+                    <span class="text-xs text-gray-400">${maskedPhone}</span>
+                </div>
+                <div class="text-right">
+                    <span class="text-amber-400 font-extrabold">+₹${l.bonus.toFixed(2)}</span>
+                    <span class="block text-[10px] text-gray-400">${l.date}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    if (logs.length === 0) {
+        logsHTML = `<div class="text-gray-400 text-center py-8 text-sm">No referrals registered yet. Share your invite link to start earning!</div>`;
+    }
+    
+    res.send(`
+        <div class="flex flex-col p-5 pb-20 w-full min-h-screen text-main font-sans" style="font-family: 'Outfit', sans-serif !important; background: radial-gradient(circle at top, #1c0e35 0%, #080512 100%) !important;">
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-purple-500/10 mb-5">
+                <button onclick="loadTab('Me', '/user/tofactor-dashboard-new')" class="p-2 text-white font-black text-sm flex items-center gap-1">❮ Back</button>
+                <h1 class="font-extrabold text-lg text-white">Affiliate Partner</h1>
+                <div class="w-8"></div>
+            </div>
+            
+            <!-- VIP Partner Banner -->
+            <div class="w-full bg-gradient-to-br from-[#FFE27C] via-[#FFBE1A] to-[#AA7C11] rounded-2xl p-5 text-[#0c0817] flex flex-col gap-2 relative overflow-hidden mb-5 shadow-[0_0_20px_rgba(255,190,26,0.3)]">
+                <div class="absolute -right-5 -top-5 w-24 h-24 bg-white/20 rounded-full blur-xl"></div>
+                <div class="text-[10px] uppercase tracking-wider font-extrabold opacity-80">Affiliate Commission Status</div>
+                <div class="text-2xl font-black uppercase tracking-tight">VIP Gold Partner</div>
+                <div class="text-xs font-bold mt-1 opacity-90">Earn ₹100.00 cash bonus for every friend you refer instantly!</div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                <div class="bg-white/5 backdrop-blur-md rounded-xl p-4 border border-purple-500/10">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Total Referrals</span>
+                    <span class="text-2xl font-black text-white mt-1 block">${totalReferrals} Users</span>
+                </div>
+                <div class="bg-white/5 backdrop-blur-md rounded-xl p-4 border border-purple-500/10">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Total Earned</span>
+                    <span class="text-2xl font-black text-[#ffbe1a] mt-1 block">₹${totalEarnings.toFixed(2)}</span>
+                </div>
+            </div>
+            
+            <!-- Invite Link Card -->
+            <div class="bg-white/5 backdrop-blur-md rounded-xl p-5 border border-purple-500/15 mb-5 flex flex-col gap-3">
+                <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Your Referral Link</span>
+                <div class="flex items-center gap-2 bg-black/40 rounded-lg p-3 border border-purple-500/20">
+                    <input id="refLinkInput" type="text" readonly value="${refLink}" class="w-full bg-transparent border-none text-white text-xs font-semibold outline-none" />
+                    <button onclick="copyRefLink()" class="px-3 py-1.5 bg-amber-500 text-black text-[10px] font-extrabold rounded-md hover:bg-amber-400 transition-all uppercase tracking-wider active:scale-95 shrink-0">Copy</button>
+                </div>
+            </div>
+            
+            <!-- Invite History -->
+            <div class="bg-white/5 backdrop-blur-md rounded-xl p-5 border border-purple-500/15 flex-1">
+                <span class="text-xs text-amber-400 font-bold uppercase tracking-wider block border-b border-purple-500/10 pb-2 mb-3">Referred Accounts List</span>
+                <div class="flex flex-col gap-1 max-h-96 overflow-y-auto pr-1">
+                    ${logsHTML}
+                </div>
+            </div>
+            
+            <script>
+                function copyRefLink() {
+                    const input = document.getElementById('refLinkInput');
+                    input.select();
+                    input.setSelectionRange(0, 99999);
+                    try {
+                        navigator.clipboard.writeText(input.value);
+                        alert("Referral link copied to clipboard successfully!");
+                    } catch(err) {
+                        document.execCommand('copy');
+                        alert("Referral link copied to clipboard successfully!");
+                    }
+                }
+            </script>
+        </div>
+    `);
 });
 
 // 2. Dynamic Results List Fragment
@@ -308,6 +496,13 @@ app.get('/user/tofactor-dashboard-new', (req, res) => {
                     <div class="flex items-center gap-3">
                         <span class="text-lg">💳</span>
                         <span class="font-semibold text-gray-700">Transaction History</span>
+                    </div>
+                    <span class="text-gray-400">❯</span>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-xs border border-gray/40 flex items-center justify-between cursor-pointer" onclick="loadTab('Affiliate', '/user/affiliate/dashboard')">
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">🤝</span>
+                        <span class="font-semibold text-gray-700">Referrals & Affiliate Program</span>
                     </div>
                     <span class="text-gray-400">❯</span>
                 </div>
@@ -1490,6 +1685,554 @@ setInterval(() => {
     executeDraw(cycleInfo.cycle);
 }, 120000); // 120,000 ms = 2 minutes
 
+
+// POST /api/game/play
+app.post('/api/game/play', (req, res) => {
+    if (!userSession.isAuthenticated) {
+        return res.status(401).json({ success: false, message: 'Please sign in first.' });
+    }
+    const { betAmount, winAmount, gameName } = req.body;
+    const bet = parseFloat(betAmount);
+    const win = parseFloat(winAmount);
+    if (isNaN(bet) || bet < 0 || isNaN(win) || win < 0) {
+        return res.status(400).json({ success: false, message: 'Invalid amounts.' });
+    }
+    if (userSession.balance < bet) {
+        return res.status(400).json({ success: false, message: 'Insufficient funds.' });
+    }
+    
+    userSession.balance = userSession.balance - bet + win;
+    
+    tickets.push({
+        id: 'TXN' + Math.floor(100000 + Math.random() * 900000),
+        lotteryName: gameName || 'Casino Game',
+        numbers: win > bet ? 'WIN' : 'LOSE',
+        amount: bet,
+        payout: win,
+        status: win > bet ? 'win' : 'lose',
+        date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+        cycle: 'Casino'
+    });
+
+    res.json({
+        success: true,
+        new_balance: userSession.balance,
+        message: win > bet ? `You won ₹${win.toFixed(2)}!` : `Better luck next time!`
+    });
+});
+
+// GET /provider-game/launch
+app.get('/provider-game/launch', (req, res) => {
+    if (!userSession.isAuthenticated) {
+        return res.redirect('/user/login-form');
+    }
+    
+    const gameCode = req.query.gameCode || 'unknown';
+    const provider = (req.query.provider || 'slots').toLowerCase();
+    const gameName = req.query.gameName || 'Casino Lobby';
+    
+    const isAviator = provider === 'spribe' || gameName.toLowerCase().includes('aviator');
+    
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <title>Lobby - ${gameName}</title>
+            <link rel="stylesheet" href="/dd.css">
+            <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <style>
+                body {
+                    font-family: 'Outfit', sans-serif !important;
+                    background: radial-gradient(circle at top, #15092a 0%, #06030c 100%) !important;
+                    color: #e2dcfc !important;
+                    overflow: hidden;
+                }
+                .mono-font {
+                    font-family: 'Share Tech Mono', monospace !important;
+                }
+                .glow-border {
+                    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2), inset 0 0 10px rgba(139, 92, 246, 0.1);
+                    border: 1px solid rgba(139, 92, 246, 0.4);
+                }
+                .glow-text-gold {
+                    text-shadow: 0 0 10px rgba(255, 190, 26, 0.6);
+                }
+                .glow-text-red {
+                    text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+                }
+                /* Slots reel styling */
+                .reel-container {
+                    background: rgba(10, 5, 18, 0.8);
+                    border-radius: 12px;
+                    border: 2px solid rgba(255, 215, 0, 0.3);
+                    overflow: hidden;
+                    height: 120px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .reel-strip {
+                    display: flex;
+                    flex-direction: column;
+                    transition: transform 3s cubic-bezier(0.1, 0.8, 0.1, 1);
+                    transform: translateY(0);
+                }
+                .reel-symbol {
+                    height: 120px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 3rem;
+                }
+                /* Aviator flight line curve */
+                @keyframes fly-plane {
+                    0% { transform: translate(0, 0) scale(1); }
+                    100% { transform: translate(300px, -150px) scale(1.1); }
+                }
+                .aviator-canvas {
+                    background: linear-gradient(180deg, #100624 0%, #080312 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
+                .flight-curve {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+                .plane-icon {
+                    position: absolute;
+                    bottom: 20px;
+                    left: 20px;
+                    width: 50px;
+                    height: 50px;
+                    z-index: 10;
+                    transition: transform 0.1s linear;
+                }
+            </style>
+        </head>
+        <body class="w-full h-screen flex flex-col justify-between p-4">
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-purple-500/10">
+                <button onclick="window.location.href='/'" class="px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 rounded-full font-bold text-xs flex items-center gap-1.5 active:scale-95 transition-all text-white">
+                    ❮ Back to Lobby
+                </button>
+                <div class="flex flex-col items-center">
+                    <span class="text-xs text-amber-400 font-bold uppercase tracking-widest">${provider}</span>
+                    <h1 class="font-extrabold text-sm text-white">${gameName}</h1>
+                </div>
+                <div class="flex items-center gap-2 bg-black/40 rounded-full px-4 py-1.5 border border-purple-500/20">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase">Balance</span>
+                    <span id="gameBalance" class="font-extrabold text-[#ffbe1a] text-sm">₹${userSession.balance.toFixed(2)}</span>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 flex flex-col justify-center items-center my-6 max-w-lg mx-auto w-full">
+                ${isAviator ? `
+                <!-- AVIATOR CRASH GAME SIMULATOR -->
+                <div class="w-full bg-[#0d071b] glow-border rounded-2xl p-5 flex flex-col gap-4 relative">
+                    <!-- Screen/Canvas -->
+                    <div class="w-full h-64 rounded-xl aviator-canvas flex flex-col items-center justify-center relative overflow-hidden border border-purple-500/10">
+                        <svg class="flight-curve" id="aviatorSvg" viewBox="0 0 400 300">
+                            <path id="flightPath" d="M 40 260 Q 40 260 40 260" fill="none" stroke="#ef4444" stroke-width="4" stroke-linecap="round" />
+                        </svg>
+                        
+                        <img id="aviatorPlane" class="plane-icon hidden" src="/game/aviator_plane.png" style="display:none;" />
+                        <!-- Fallback plane marker -->
+                        <div id="planeFallback" class="absolute bg-red-600 text-white font-extrabold text-xs px-2.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-[0_0_15px_rgba(239,68,68,0.8)]" style="bottom: 20px; left: 20px; transition: all 0.1s linear; display: none;">
+                            ✈️ <span class="text-[9px] uppercase tracking-widest">Lucky Plane</span>
+                        </div>
+
+                        <!-- Multiplier Readout -->
+                        <div class="flex flex-col items-center justify-center z-20">
+                            <span id="crashMultiplier" class="text-5xl font-black tracking-tight text-white mono-font">1.00x</span>
+                            <span id="flightStatus" class="text-[10px] uppercase font-bold tracking-widest text-[#0984e3] mt-2">Waiting for next round</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Controls -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-black/30 border border-purple-500/10 rounded-xl p-3 flex flex-col gap-2">
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Bet Amount (INR)</span>
+                            <div class="flex gap-2">
+                                <button onclick="setBetAmount(50)" class="flex-1 py-1.5 bg-white/5 hover:bg-white/10 text-xs font-bold rounded-lg transition-all text-white">50</button>
+                                <button onclick="setBetAmount(100)" class="flex-1 py-1.5 bg-white/5 hover:bg-white/10 text-xs font-bold rounded-lg transition-all text-white">100</button>
+                                <button onclick="setBetAmount(500)" class="flex-1 py-1.5 bg-white/5 hover:bg-white/10 text-xs font-bold rounded-lg transition-all text-white">500</button>
+                            </div>
+                            <input id="betInput" type="number" value="100" class="w-full text-center py-2 bg-black/60 rounded-lg text-white font-black text-sm outline-none border border-purple-500/20 focus:border-amber-400" />
+                        </div>
+
+                        <button id="aviatorActionBtn" onclick="triggerAviatorRound()" class="bg-gradient-to-br from-[#10b981] to-[#047857] text-[#0d071b] font-black uppercase text-base tracking-widest rounded-xl shadow-lg active:scale-[0.98] transition-all flex flex-col items-center justify-center gap-0.5 text-white">
+                            <span class="text-lg">BET</span>
+                            <span class="text-[9px] font-bold opacity-80">Place Your Wager</span>
+                        </button>
+                    </div>
+                </div>
+                ` : `
+                <!-- SLOT MACHINE SIMULATOR -->
+                <div class="w-full bg-[#0d071b] glow-border rounded-2xl p-6 flex flex-col gap-6 relative">
+                    <!-- Gold Frame Reels -->
+                    <div class="grid grid-cols-3 gap-3 p-3 bg-gradient-to-b from-[#110724] to-[#080312] border border-amber-500/30 rounded-xl relative">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-black font-extrabold text-[9px] uppercase px-3 py-0.5 rounded-full tracking-wider shadow-md">
+                            Lucky Reels
+                        </div>
+                        
+                        <!-- Reel 1 -->
+                        <div class="reel-container">
+                            <div class="reel-strip" id="reel0">
+                                <div class="reel-symbol">🍒</div>
+                            </div>
+                        </div>
+                        <!-- Reel 2 -->
+                        <div class="reel-container">
+                            <div class="reel-strip" id="reel1">
+                                <div class="reel-symbol">💎</div>
+                            </div>
+                        </div>
+                        <!-- Reel 3 -->
+                        <div class="reel-container">
+                            <div class="reel-strip" id="reel2">
+                                <div class="reel-symbol">👑</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Controls -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-black/30 border border-purple-500/10 rounded-xl p-3 flex flex-col gap-2">
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Bet Amount (INR)</span>
+                            <div class="flex gap-2">
+                                <button onclick="setBetAmount(50)" class="flex-1 py-1.5 bg-white/5 hover:bg-white/10 text-xs font-bold rounded-lg transition-all text-white">50</button>
+                                <button onclick="setBetAmount(100)" class="flex-1 py-1.5 bg-white/5 hover:bg-white/10 text-xs font-bold rounded-lg transition-all text-white">100</button>
+                                <button onclick="setBetAmount(500)" class="flex-1 py-1.5 bg-white/5 hover:bg-white/10 text-xs font-bold rounded-lg transition-all text-white">500</button>
+                            </div>
+                            <input id="betInput" type="number" value="100" class="w-full text-center py-2 bg-black/60 rounded-lg text-white font-black text-sm outline-none border border-purple-500/20 focus:border-amber-400" />
+                        </div>
+
+                        <button id="spinBtn" onclick="triggerSlotsRound()" class="bg-gradient-to-br from-[#FFE27C] via-[#FFBE1A] to-[#AA7C11] text-[#0c0817] font-black uppercase text-base tracking-widest rounded-xl shadow-lg active:scale-[0.98] transition-all flex flex-col items-center justify-center gap-0.5">
+                            <span class="text-lg">SPIN</span>
+                            <span class="text-[9px] font-bold opacity-80">Spin & Win Jackpot</span>
+                        </button>
+                    </div>
+                </div>
+                `}
+            </div>
+
+            <!-- Footer Ticker -->
+            <div class="w-full max-w-lg mx-auto text-center border-t border-purple-500/10 pt-3">
+                <span class="text-[9px] uppercase tracking-widest text-gray-500 font-extrabold">All games are fully certified and provably fair</span>
+            </div>
+
+            <script>
+                function setBetAmount(amount) {
+                    document.getElementById('betInput').value = amount;
+                }
+
+                function playSound(type) {
+                    if (typeof AudioContext === 'undefined') return;
+                    try {
+                        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        const osc = audioCtx.createOscillator();
+                        const gainNode = audioCtx.createGain();
+                        osc.connect(gainNode);
+                        gainNode.connect(audioCtx.destination);
+                        
+                        if (type === 'spin' || type === 'fly') {
+                            osc.type = 'sawtooth';
+                            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 1.5);
+                            gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                            gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+                            osc.start();
+                            osc.stop(audioCtx.currentTime + 1.5);
+                        } else if (type === 'win') {
+                            osc.type = 'sine';
+                            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15);
+                            osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.3);
+                            gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                            gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+                            osc.start();
+                            osc.stop(audioCtx.currentTime + 0.6);
+                        } else if (type === 'crash' || type === 'lose') {
+                            osc.type = 'triangle';
+                            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.8);
+                            gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                            gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+                            osc.start();
+                            osc.stop(audioCtx.currentTime + 0.8);
+                        }
+                    } catch(e) {
+                        console.log("AudioContext blocked.");
+                    }
+                }
+
+                // ==========================================
+                // AVIATOR ENGINE
+                // ==========================================
+                let aviatorActive = false;
+                let currentBet = 0;
+                let currentMultiplierVal = 1.00;
+                let crashPoint = 0;
+                let aviatorTimer = null;
+                
+                function triggerAviatorRound() {
+                    const btn = document.getElementById('aviatorActionBtn');
+                    const betVal = parseFloat(document.getElementById('betInput').value);
+                    const balEl = document.getElementById('gameBalance');
+                    
+                    if (isNaN(betVal) || betVal <= 0) {
+                        Swal.fire('Error', 'Please enter a valid bet amount.', 'error');
+                        return;
+                    }
+                    
+                    if (!aviatorActive) {
+                        currentBet = betVal;
+                        
+                        fetch('/api/game/play', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ betAmount: currentBet, winAmount: 0, gameName: '${gameName}' })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (!data.success) {
+                                Swal.fire('Error', data.message || 'Failed to place bet.', 'error');
+                                return;
+                            }
+                            
+                            balEl.textContent = '₹' + data.new_balance.toFixed(2);
+                            if (window.userSession) window.userSession.balance = data.new_balance;
+                            
+                            aviatorActive = true;
+                            currentMultiplierVal = 1.00;
+                            
+                            crashPoint = Math.random() < 0.8 ? (1.05 + Math.random() * 2.45) : (3.50 + Math.random() * 6.50);
+                            
+                            btn.innerHTML = '<span class="text-lg">CASH OUT</span><span class="text-[9px] font-bold opacity-80" id="cashoutAmount">₹' + currentBet.toFixed(2) + '</span>';
+                            btn.classList.remove('from-[#10b981]', 'to-[#047857]');
+                            btn.classList.add('from-[#f59e0b]', 'to-[#d97706]');
+                            
+                            document.getElementById('flightStatus').textContent = 'Plane is flying...';
+                            document.getElementById('flightStatus').className = 'text-[10px] uppercase font-bold tracking-widest text-[#f43f5e] mt-2';
+                            
+                            const plane = document.getElementById('planeFallback');
+                            plane.style.display = 'flex';
+                            plane.style.bottom = '20px';
+                            plane.style.left = '20px';
+                            
+                            playSound('fly');
+                            
+                            const startTime = Date.now();
+                            aviatorTimer = setInterval(() => {
+                                const elapsed = (Date.now() - startTime) / 1000;
+                                currentMultiplierVal = 1.00 + Math.pow(elapsed, 1.3) * 0.15;
+                                
+                                document.getElementById('crashMultiplier').textContent = currentMultiplierVal.toFixed(2) + 'x';
+                                document.getElementById('crashMultiplier').className = 'text-5xl font-black tracking-tight text-white mono-font glow-text-gold';
+                                
+                                const cashoutVal = currentBet * currentMultiplierVal;
+                                const cashoutValEl = document.getElementById('cashoutAmount');
+                                if (cashoutValEl) cashoutValEl.textContent = '₹' + cashoutVal.toFixed(2);
+                                
+                                const pct = Math.min(elapsed / 8, 1);
+                                plane.style.bottom = (20 + pct * 180) + 'px';
+                                plane.style.left = (20 + pct * 300) + 'px';
+                                
+                                if (currentMultiplierVal >= crashPoint) {
+                                    clearInterval(aviatorTimer);
+                                    playSound('crash');
+                                    aviatorActive = false;
+                                    btn.innerHTML = '<span class="text-lg">FLEW AWAY</span><span class="text-[9px] font-bold opacity-80">Crash at ' + crashPoint.toFixed(2) + 'x</span>';
+                                    btn.disabled = true;
+                                    btn.style.opacity = '0.5';
+                                    document.getElementById('crashMultiplier').className = 'text-5xl font-black tracking-tight text-red-500 mono-font glow-text-red';
+                                    document.getElementById('flightStatus').textContent = 'Flew Away!';
+                                    
+                                    setTimeout(() => {
+                                        btn.disabled = false;
+                                        btn.style.opacity = '1';
+                                        btn.innerHTML = '<span class="text-lg">BET</span><span class="text-[9px] font-bold opacity-80">Place Your Wager</span>';
+                                        btn.classList.add('from-[#10b981]', 'to-[#047857]');
+                                        btn.classList.remove('from-[#f59e0b]', 'to-[#d97706]');
+                                        document.getElementById('flightStatus').textContent = 'Waiting for next round';
+                                        document.getElementById('flightStatus').className = 'text-[10px] uppercase font-bold tracking-widest text-[#0984e3] mt-2';
+                                        plane.style.display = 'none';
+                                    }, 2500);
+                                }
+                            }, 100);
+                        });
+                    } else {
+                        clearInterval(aviatorTimer);
+                        playSound('win');
+                        aviatorActive = false;
+                        
+                        const winVal = currentBet * currentMultiplierVal;
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        btn.innerHTML = '<span class="text-lg">CASHED OUT</span><span class="text-[9px] font-bold opacity-80">+₹' + winVal.toFixed(2) + '</span>';
+                        
+                        fetch('/api/game/play', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ betAmount: 0, winAmount: winVal, gameName: '${gameName}' })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            balEl.textContent = '₹' + data.new_balance.toFixed(2);
+                            if (window.userSession) window.userSession.balance = data.new_balance;
+                            
+                            Swal.fire({
+                                title: 'CASH OUT WIN!',
+                                text: 'Successfully cashed out at ' + currentMultiplierVal.toFixed(2) + 'x for a payout of ₹' + winVal.toFixed(2) + '!',
+                                icon: 'success',
+                                background: '#1c1230',
+                                color: '#ffffff',
+                                confirmButtonColor: '#ffbe1a'
+                            });
+                            
+                            setTimeout(() => {
+                                btn.disabled = false;
+                                btn.style.opacity = '1';
+                                btn.innerHTML = '<span class="text-lg">BET</span><span class="text-[9px] font-bold opacity-80">Place Your Wager</span>';
+                                btn.classList.add('from-[#10b981]', 'to-[#047857]');
+                                btn.classList.remove('from-[#f59e0b]', 'to-[#d97706]');
+                                document.getElementById('flightStatus').textContent = 'Waiting for next round';
+                                document.getElementById('flightStatus').className = 'text-[10px] uppercase font-bold tracking-widest text-[#0984e3] mt-2';
+                                document.getElementById('planeFallback').style.display = 'none';
+                            }, 2500);
+                        });
+                    }
+                }
+
+                // ==========================================
+                // SLOTS ENGINE
+                // ==========================================
+                const symbols = ['🍒', '🍋', '🍇', '💎', '🔔', '🍀', '👑'];
+                
+                function triggerSlotsRound() {
+                    const btn = document.getElementById('spinBtn');
+                    const betVal = parseFloat(document.getElementById('betInput').value);
+                    const balEl = document.getElementById('gameBalance');
+                    
+                    if (isNaN(betVal) || betVal <= 0) {
+                        Swal.fire('Error', 'Please enter a valid bet amount.', 'error');
+                        return;
+                    }
+                    
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.innerText = 'SPINNING...';
+                    
+                    fetch('/api/game/play', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ betAmount: betVal, winAmount: 0, gameName: '${gameName}' })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data.success) {
+                            Swal.fire('Error', data.message || 'Failed to spin.', 'error');
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                            btn.innerText = 'SPIN';
+                            return;
+                        }
+                        
+                        balEl.textContent = '₹' + data.new_balance.toFixed(2);
+                        if (window.userSession) window.userSession.balance = data.new_balance;
+                        
+                        playSound('spin');
+                        
+                        const reelResults = [
+                            symbols[Math.floor(Math.random() * symbols.length)],
+                            symbols[Math.floor(Math.random() * symbols.length)],
+                            symbols[Math.floor(Math.random() * symbols.length)]
+                        ];
+                        
+                        for (let r = 0; r < 3; r++) {
+                            const reel = document.getElementById('reel' + r);
+                            reel.innerHTML = '';
+                            
+                            for (let i = 0; i < 15; i++) {
+                                const symDiv = document.createElement('div');
+                                symDiv.className = 'reel-symbol';
+                                symDiv.textContent = i === 14 ? reelResults[r] : symbols[Math.floor(Math.random() * symbols.length)];
+                                reel.appendChild(symDiv);
+                            }
+                            
+                            reel.style.transition = 'none';
+                            reel.style.transform = 'translateY(0)';
+                            
+                            void reel.offsetHeight;
+                            
+                            reel.style.transition = 'transform ' + (2 + r * 0.5) + 's cubic-bezier(0.1, 0.8, 0.1, 1)';
+                            reel.style.transform = 'translateY(-1680px)';
+                        }
+                        
+                        setTimeout(() => {
+                            let multiplier = 0;
+                            if (reelResults[0] === reelResults[1] && reelResults[1] === reelResults[2]) {
+                                multiplier = reelResults[0] === '👑' ? 15 : (reelResults[0] === '💎' ? 10 : 5);
+                            } else if (reelResults[0] === reelResults[1] || reelResults[1] === reelResults[2] || reelResults[0] === reelResults[2]) {
+                                multiplier = 1.5;
+                            }
+                            
+                            const winVal = betVal * multiplier;
+                            
+                            if (winVal > 0) {
+                                playSound('win');
+                                fetch('/api/game/play', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ betAmount: 0, winAmount: winVal, gameName: '${gameName}' })
+                                })
+                                .then(res2 => res2.json())
+                                .then(data2 => {
+                                    balEl.textContent = '₹' + data2.new_balance.toFixed(2);
+                                    if (window.userSession) window.userSession.balance = data2.new_balance;
+                                    
+                                    Swal.fire({
+                                        title: 'BIG WIN!',
+                                        text: 'You matched symbols ' + reelResults.join(' - ') + ' and won ₹' + winVal.toFixed(2) + '!',
+                                        icon: 'success',
+                                        background: '#1c1230',
+                                        color: '#ffffff',
+                                        confirmButtonColor: '#ffbe1a'
+                                    });
+                                    
+                                    btn.disabled = false;
+                                    btn.style.opacity = '1';
+                                    btn.innerText = 'SPIN';
+                                });
+                            } else {
+                                playSound('lose');
+                                Swal.fire({
+                                    title: 'LOST',
+                                    text: 'Reels landed: ' + reelResults.join(' - ') + '. Try again!',
+                                    icon: 'info',
+                                    background: '#1c1230',
+                                    color: '#ffffff',
+                                    confirmButtonColor: '#ffbe1a'
+                                });
+                                btn.disabled = false;
+                                btn.style.opacity = '1';
+                                btn.innerText = 'SPIN';
+                            }
+                        }, 3200);
+                    });
+                }
+            </script>
+        </body>
+        </html>
+    `);
+});
 
 // ========================================================
 // Wildcard Page Fallback: Serve index.html for undefined routes so clean page paths function
