@@ -1,0 +1,165 @@
+{
+  "userSession": {
+    "isAuthenticated": true,
+    "phone": "9876543210",
+    "username": "admin",
+    "balance": 605
+  },
+  "tickets": [],
+  "chats": [
+    {
+      "username": "Lottery_King",
+      "message": "Got a 3D win on Dear Lottery 8PM today! 🎉",
+      "time": "10 mins ago"
+    },
+    {
+      "username": "Rajesh_K",
+      "message": "Is Dear 8PM result out yet?",
+      "time": "5 mins ago"
+    },
+    {
+      "username": "Admin_Support",
+      "message": "Welcome to bet999x! Live chat is open.",
+      "time": "Just now"
+    }
+  ],
+  "drawResults": [
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 314,
+      "numbers": "029",
+      "time": "5:46:00 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 313,
+      "numbers": "946",
+      "time": "5:44:00 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 314,
+      "numbers": "268",
+      "time": "5:42:00 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 310,
+      "numbers": "934",
+      "time": "5:39:59 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 313,
+      "numbers": "814",
+      "time": "5:37:59 AM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 309,
+      "numbers": "205",
+      "time": "5:35:59 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 312,
+      "numbers": "624",
+      "time": "5:33:59 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 311,
+      "numbers": "260",
+      "time": "5:31:59 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 312,
+      "numbers": "056",
+      "time": "5:29:59 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 310,
+      "numbers": "281",
+      "time": "5:27:59 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 309,
+      "numbers": "374",
+      "time": "5:25:59 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 311,
+      "numbers": "200",
+      "time": "5:23:59 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 310,
+      "numbers": "887",
+      "time": "5:21:59 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 308,
+      "numbers": "341",
+      "time": "5:17:20 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 309,
+      "numbers": "317",
+      "time": "5:15:20 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 308,
+      "numbers": "168",
+      "time": "5:13:20 AM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 307,
+      "numbers": "775",
+      "time": "5:11:20 AM"
+    },
+    {
+      "name": "Dear Lottery 8PM",
+      "cycle": 307,
+      "numbers": "357",
+      "time": "Yesterday, 8:00 PM"
+    },
+    {
+      "name": "Dear Lottery 6PM",
+      "cycle": 306,
+      "numbers": "241",
+      "time": "Yesterday, 6:00 PM"
+    },
+    {
+      "name": "Kerala Lottery 3PM",
+      "cycle": 308,
+      "numbers": "902",
+      "time": "Yesterday, 3:00 PM"
+    }
+  ],
+  "activeCycles": {
+    "Dear Lottery 6PM": {
+      "name": "Dear Lottery 6PM",
+      "price": 12,
+      "cycle": 315
+    },
+    "Dear Lottery 8PM": {
+      "name": "Dear Lottery 8PM",
+      "price": 12,
+      "cycle": 315
+    },
+    "Kerala Lottery 3PM": {
+      "name": "Kerala Lottery 3PM",
+      "price": 12,
+      "cycle": 311
+    }
+  }
+}

@@ -2,182 +2,276 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4 & 5 Digit Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f5f5f5; color: #333; margin: 0; padding: 0; }
-        .bg-orange { background-color: #E27B49; }
-        .text-orange { color: #E27B49; }
-        .btn-green { background-color: #00E065; color: white; }
-        .border-orange { border-color: #E27B49; }
+        body {
+            font-family: 'Outfit', sans-serif !important;
+            background: radial-gradient(circle at top, #1c0e35 0%, #080512 100%) !important;
+            color: #e2dcfc !important;
+            margin: 0;
+            padding: 0;
+        }
+        .header-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(18, 10, 30, 0.9) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.15) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+        }
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18, 10, 30, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border-top: 1px solid rgba(255, 215, 0, 0.15) !important;
+            z-index: 50;
+            box-shadow: 0 -4px 25px rgba(0,0,0,0.5);
+            padding: 12px 16px;
+        }
+        .glass-card-override {
+            background: rgba(28, 18, 48, 0.65) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border: 1px solid rgba(255, 215, 0, 0.15) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(140, 91, 255, 0.1) !important;
+            border-radius: 16px !important;
+        }
         .circle-select {
-            width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd;
-            display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold;
-            margin: 0 5px; color: transparent; background-color: white;
-            transition: all 0.2s ease; cursor: pointer;
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 50% !important;
+            border: 2px solid rgba(140, 91, 255, 0.4) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 20px !important;
+            font-weight: 900 !important;
+            margin: 0 5px !important;
+            color: #ffffff !important;
+            background: rgba(16, 9, 28, 0.8) !important;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
         }
         .circle-select.selected {
-            border-color: #176BE3; color: #176BE3;
+            border-color: #ffbe1a !important;
+            box-shadow: 0 0 15px rgba(255, 190, 26, 0.6), inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+            color: #ffbe1a !important;
+            text-shadow: 0 0 5px #ffbe1a !important;
         }
-        .circle-select.orange { border-color: #FF9800; color: #FF9800; }
-        .circle-select.blue { border-color: #2196F3; color: #2196F3; }
-        .circle-select.green { border-color: #4CAF50; color: #4CAF50; }
-        .circle-select.cyan { border-color: #00BCD4; color: #00BCD4; }
         
         /* Result balls */
         .ball {
-            width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 14px; font-weight: bold; color: #333; border: 2px solid; background-color: white; margin-left: 4px;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 16px !important;
+            font-weight: 900 !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            background: linear-gradient(135deg, #8C5BFF 0%, #4400B1 100%) !important;
+            margin-left: 6px !important;
+            box-shadow: 0 0 10px rgba(140, 91, 255, 0.5) !important;
         }
-        .ball.red { border-color: #E53935; color: #E53935; }
-        .ball.orange { border-color: #FF9800; color: #FF9800; }
-        .ball.blue { border-color: #1E88E5; color: #1E88E5; }
-        .ball.green { border-color: #43A047; color: #43A047; }
-        .ball.cyan { border-color: #00ACC1; color: #00ACC1; }
 
         .time-box {
-            background-color: white; color: black; font-weight: bold; border-radius: 4px;
-            padding: 2px 6px; font-size: 14px; text-align: center; display: inline-block;
+            background-color: rgba(16, 9, 28, 0.8);
+            color: #ffffff;
+            font-weight: 900;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 4px 10px;
+            font-size: 16px;
+            text-align: center;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
-        .time-label { font-size: 8px; color: #E27B49; display: block; margin-top: -2px; }
+        .time-label {
+            font-size: 8px;
+            color: #ffbe1a;
+            display: block;
+            margin-top: -2px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
         
-        .header-bar { position: sticky; top: 0; z-index: 50; background-color: white; }
-        .bottom-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; background-color: white; z-index: 50;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); padding: 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px;
-        }
-
         /* Toast Notification */
         #toast {
-            visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
-            border-radius: 2px; padding: 16px; position: fixed; z-index: 100; left: 50%; transform: translateX(-50%); bottom: 90px;
-            font-size: 14px; border-radius: 8px; transition: visibility 0.5s, opacity 0.5s linear; opacity: 0;
+            visibility: hidden;
+            min-width: 250px;
+            background: rgba(28, 18, 48, 0.95);
+            color: #fff;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 90px;
+            font-size: 14px;
+            border-radius: 12px;
+            transition: visibility 0.5s, opacity 0.5s linear;
+            opacity: 0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
         #toast.show { visibility: visible; opacity: 1; }
+
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+        @keyframes marquee2 {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(0%); }
+        }
+        .animate-marquee {
+            animation: marquee 15s linear infinite;
+        }
+        .animate-marquee2 {
+            animation: marquee2 15s linear infinite;
+        }
     </style>
 </head>
 <body class="pb-24">
 
     <!-- Header -->
-    <div class="header-bar flex items-center justify-between px-4 py-3 border-b">
-        <div class="flex items-center cursor-pointer" onclick="window.history.back()">
+    <div class="header-bar flex items-center justify-between px-4 py-3">
+        <div class="flex items-center cursor-pointer text-white" onclick="window.history.back()">
             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            <h1 class="text-lg font-bold">4 & 5 Digit Game</h1>
+            <h1 class="text-lg font-extrabold text-white">4 & 5 Digit Game</h1>
         </div>
         <div id="auth-header-container">
-            <button onclick="window.location.href='/user/login-form/'" class="btn-green px-4 py-1.5 rounded-lg font-bold text-sm">Sign In</button>
+            <button onclick="window.location.href='/user/login-form/'" class="bg-gradient-to-r from-amber-400 to-amber-600 text-black px-4 py-1.5 rounded-lg font-bold text-sm shadow-md active:scale-95 transition-all">Sign In</button>
         </div>
     </div>
     
     <!-- Announcement -->
-    <div class="bg-green-200 px-4 py-2 flex items-center text-green-700 text-sm overflow-hidden whitespace-nowrap">
+    <div class="bg-[#120a1e] border-y border-amber-500/20 px-4 py-2 flex items-center text-amber-400 text-sm overflow-hidden whitespace-nowrap">
         <svg class="w-5 h-5 mr-2 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"></path></svg>
-        <marquee scrollamount="4">Welcome to 4 & 5 Digit Game! Bet and win massive rewards!</marquee>
+        <div class="relative flex overflow-x-hidden w-full select-none">
+            <div class="animate-marquee whitespace-nowrap font-bold">
+                Welcome to 4 & 5 Digit Game! Bet and win massive rewards! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="absolute top-0 animate-marquee2 whitespace-nowrap font-bold">
+                Welcome to 4 & 5 Digit Game! Bet and win massive rewards! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
     </div>
 
     <!-- Draw Info Card -->
-    <div class="m-3 bg-orange rounded-xl text-white shadow p-3 relative overflow-hidden">
-        <div class="flex justify-between items-start border-b border-orange-400 pb-3 mb-3">
+    <div class="m-3 bg-gradient-to-br from-[#2c1a4d] via-[#1a0f30] to-[#0c0817] rounded-xl text-white border border-amber-500/20 shadow-[0_0_20px_rgba(255,215,0,0.15)] p-3 relative overflow-hidden">
+        <div class="flex justify-between items-start border-b border-purple-500/20 pb-3 mb-3">
             <div>
-                <h2 class="font-bold text-lg leading-tight mb-1">MUMBAI QUICK</h2>
-                <div class="text-xs text-white/80">Last draw</div>
-                <div class="text-sm font-semibold" id="last-draw-id">Loading...</div>
+                <h2 class="font-black text-lg leading-tight mb-1 text-[#ffbe1a] tracking-wide">MUMBAI QUICK</h2>
+                <div class="text-[10px] text-gray-400">Last draw</div>
+                <div class="text-sm font-bold text-gray-200" id="last-draw-id">Loading...</div>
             </div>
-            <div class="bg-orange-600 rounded-lg p-2 text-center">
-                <div class="text-[10px] text-white/80 mb-1 uppercase">Last draw result</div>
+            <div class="bg-black/40 border border-amber-500/10 rounded-lg p-2 text-center">
+                <div class="text-[9px] text-amber-400 mb-1 uppercase font-bold">Last draw result</div>
                 <div class="flex" id="last-draw-result">
-                    <!-- Balls inserted here -->
-                    <span class="text-sm">...</span>
+                    <span class="text-xs text-gray-400">...</span>
                 </div>
             </div>
         </div>
         
         <div class="flex justify-between items-center">
             <div>
-                <div class="text-xs text-white/80">Next Draw</div>
-                <div class="text-sm font-semibold" id="next-draw-id">Loading...</div>
+                <div class="text-[10px] text-gray-400">Next Draw</div>
+                <div class="text-sm font-bold text-gray-200" id="next-draw-id">Loading...</div>
             </div>
             <div class="flex items-center gap-1 font-mono">
-                <div class="time-box" id="countdown-min">00<span class="time-label">MIN</span></div><span class="font-bold">:</span>
+                <div class="time-box" id="countdown-min">00<span class="time-label">MIN</span></div><span class="font-black text-[#ffbe1a]">:</span>
                 <div class="time-box" id="countdown-sec">00<span class="time-label">SEC</span></div>
             </div>
-            <div class="flex gap-2 cursor-pointer">
+            <div class="flex gap-2 cursor-pointer text-gray-300 hover:text-amber-400 transition-colors">
                 <div class="flex flex-col items-center justify-center">
                     <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span class="text-[10px]">Rules</span>
+                    <span class="text-[10px] font-bold">Rules</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- 4 Digit Section -->
-    <div class="m-3 bg-white rounded-xl shadow p-4" id="section-4d">
+    <div class="m-3 glass-card-override p-4" id="section-4d">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-gray-800">4 Digit <span class="text-xs font-normal text-gray-500">₹5.00/Ticket</span></h3>
-            <div class="font-black text-xl text-yellow-500 italic drop-shadow-sm" style="-webkit-text-stroke: 1px #1d4ed8;">₹10,000</div>
+            <h3 class="font-extrabold text-white">4 Digit <span class="text-xs font-semibold text-gray-400">₹5.00/Ticket</span></h3>
+            <div class="font-black text-xl text-[#ffbe1a] italic drop-shadow-[0_2px_8px_rgba(255,190,26,0.3)]">₹10,000</div>
         </div>
         
         <div class="flex justify-center gap-2 mb-6 bet-inputs">
-            <div class="flex flex-col items-center"><div class="text-red-500 font-bold mb-1">A</div><div class="circle-select red" onclick="cycleNumber(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-orange-500 font-bold mb-1">B</div><div class="circle-select orange" onclick="cycleNumber(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-blue-500 font-bold mb-1">C</div><div class="circle-select blue" onclick="cycleNumber(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-green-500 font-bold mb-1">D</div><div class="circle-select green" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-red-400 font-bold mb-1">A</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-orange-400 font-bold mb-1">B</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-blue-400 font-bold mb-1">C</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-green-400 font-bold mb-1">D</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
         </div>
         
         <div class="flex gap-2 items-center">
-            <div class="flex items-center border rounded bg-gray-50 overflow-hidden h-10 w-24">
-                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600" onclick="changeMultiplier('4d', -1)">-</button>
-                <input type="number" id="mult-4d" value="1" class="w-full h-full text-center bg-transparent border-none outline-none font-bold text-sm" readonly>
-                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600" onclick="changeMultiplier('4d', 1)">+</button>
+            <div class="flex items-center border border-purple-500/30 rounded bg-black/40 overflow-hidden h-10 w-24">
+                <button class="w-8 h-full flex items-center justify-center bg-white/10 active:bg-white/20 text-white font-black" onclick="changeMultiplier('4d', -1)">-</button>
+                <input type="number" id="mult-4d" aria-label="Multiplier 4D" placeholder="1" value="1" class="w-full h-full text-center bg-transparent border-none outline-none font-bold text-sm text-white" readonly>
+                <button class="w-8 h-full flex items-center justify-center bg-white/10 active:bg-white/20 text-white font-black" onclick="changeMultiplier('4d', 1)">+</button>
             </div>
-            <button class="flex-1 h-10 border border-green-500 text-green-500 rounded font-semibold text-sm active:bg-green-50" onclick="randomizeCircles('section-4d')">Random</button>
-            <button class="flex-1 h-10 bg-green-500 text-white rounded font-bold text-sm active:bg-green-600 shadow-sm" onclick="addToCart('4d')">Add</button>
+            <button class="flex-1 h-10 border border-[#ffbe1a] text-[#ffbe1a] rounded font-bold text-sm active:bg-[#ffbe1a]/10" onclick="randomizeCircles('section-4d')">Random</button>
+            <button class="flex-1 h-10 bg-gradient-to-r from-amber-400 to-amber-600 text-black rounded font-black text-sm active:scale-95 shadow-md transition-all" onclick="addToCart('4d')">Add</button>
         </div>
     </div>
 
     <!-- 5 Digit Section -->
-    <div class="m-3 bg-white rounded-xl shadow p-4" id="section-5d">
+    <div class="m-3 glass-card-override p-4" id="section-5d">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-gray-800">5 Digit <span class="text-xs font-normal text-gray-500">₹10.00/Ticket</span></h3>
-            <div class="font-black text-xl text-yellow-500 italic drop-shadow-sm" style="-webkit-text-stroke: 1px #1d4ed8;">₹1,50,000</div>
+            <h3 class="font-extrabold text-white">5 Digit <span class="text-xs font-semibold text-gray-400">₹10.00/Ticket</span></h3>
+            <div class="font-black text-xl text-[#ffbe1a] italic drop-shadow-[0_2px_8px_rgba(255,190,26,0.3)]">₹1,50,000</div>
         </div>
         
         <div class="flex justify-center gap-2 mb-6 bet-inputs">
-            <div class="flex flex-col items-center"><div class="text-red-500 font-bold mb-1">A</div><div class="circle-select red" onclick="cycleNumber(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-orange-500 font-bold mb-1">B</div><div class="circle-select orange" onclick="cycleNumber(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-blue-500 font-bold mb-1">C</div><div class="circle-select blue" onclick="cycleNumber(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-green-500 font-bold mb-1">D</div><div class="circle-select green" onclick="cycleNumber(this)">-</div></div>
-            <div class="flex flex-col items-center"><div class="text-cyan-500 font-bold mb-1">E</div><div class="circle-select cyan" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-red-400 font-bold mb-1">A</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-orange-400 font-bold mb-1">B</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-blue-400 font-bold mb-1">C</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-green-400 font-bold mb-1">D</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
+            <div class="flex flex-col items-center"><div class="text-cyan-400 font-bold mb-1">E</div><div class="circle-select" onclick="cycleNumber(this)">-</div></div>
         </div>
         
         <div class="flex gap-2 items-center">
-            <div class="flex items-center border rounded bg-gray-50 overflow-hidden h-10 w-24">
-                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600" onclick="changeMultiplier('5d', -1)">-</button>
-                <input type="number" id="mult-5d" value="1" class="w-full h-full text-center bg-transparent border-none outline-none font-bold text-sm" readonly>
-                <button class="w-8 h-full flex items-center justify-center bg-gray-100 active:bg-gray-200 text-gray-600" onclick="changeMultiplier('5d', 1)">+</button>
+            <div class="flex items-center border border-purple-500/30 rounded bg-black/40 overflow-hidden h-10 w-24">
+                <button class="w-8 h-full flex items-center justify-center bg-white/10 active:bg-white/20 text-white font-black" onclick="changeMultiplier('5d', -1)">-</button>
+                <input type="number" id="mult-5d" aria-label="Multiplier 5D" placeholder="1" value="1" class="w-full h-full text-center bg-transparent border-none outline-none font-bold text-sm text-white" readonly>
+                <button class="w-8 h-full flex items-center justify-center bg-white/10 active:bg-white/20 text-white font-black" onclick="changeMultiplier('5d', 1)">+</button>
             </div>
-            <button class="flex-1 h-10 border border-green-500 text-green-500 rounded font-semibold text-sm active:bg-green-50" onclick="randomizeCircles('section-5d')">Random</button>
-            <button class="flex-1 h-10 bg-green-500 text-white rounded font-bold text-sm active:bg-green-600 shadow-sm" onclick="addToCart('5d')">Add</button>
+            <button class="flex-1 h-10 border border-[#ffbe1a] text-[#ffbe1a] rounded font-bold text-sm active:bg-[#ffbe1a]/10" onclick="randomizeCircles('section-5d')">Random</button>
+            <button class="flex-1 h-10 bg-gradient-to-r from-amber-400 to-amber-600 text-black rounded font-black text-sm active:scale-95 shadow-md transition-all" onclick="addToCart('5d')">Add</button>
         </div>
     </div>
 
     <!-- History Tabs -->
-    <div class="m-3 bg-white rounded shadow mt-6">
-        <div class="flex border-b">
-            <button class="flex-1 py-3 text-center font-bold text-green-600 border-b-2 border-green-600">Result history</button>
-            <button class="flex-1 py-3 text-center font-semibold text-gray-500" onclick="showToast('My Orders feature coming soon')">My Order</button>
+    <div class="m-3 glass-card-override mt-6 overflow-hidden">
+        <div class="flex border-b border-purple-500/20 bg-black/20">
+            <button class="flex-1 py-3 text-center font-bold text-[#ffbe1a] border-b-2 border-[#ffbe1a]">Result history</button>
+            <button class="flex-1 py-3 text-center font-bold text-gray-400 hover:text-white transition-colors" onclick="showToast('My Orders feature coming soon')">My Order</button>
         </div>
         <div class="p-0">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-xs">
+                <thead class="bg-black/30 text-gray-400 text-xs">
                     <tr>
-                        <th class="py-2 px-3 text-left font-medium">Cycle #</th>
-                        <th class="py-2 px-3 text-center font-medium">Time</th>
-                        <th class="py-2 px-3 text-right font-medium">Number</th>
+                        <th class="py-2 px-3 text-left font-bold">Cycle #</th>
+                        <th class="py-2 px-3 text-center font-bold">Time</th>
+                        <th class="py-2 px-3 text-right font-bold">Number</th>
                     </tr>
                 </thead>
-                <tbody id="history-table" class="divide-y divide-gray-100">
+                <tbody id="history-table" class="divide-y divide-purple-500/10">
                     <!-- Dynamic Rows -->
                 </tbody>
             </table>
@@ -188,15 +282,15 @@
     <div class="bottom-bar flex justify-between items-center">
         <div class="flex items-center">
             <div class="relative mr-3 cursor-pointer" onclick="clearCart()">
-                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <svg class="w-8 h-8 text-[#ffbe1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold border border-white">0</span>
             </div>
             <div>
-                <div class="font-bold text-xl leading-none" id="cart-total">₹0.00</div>
-                <div class="text-xs text-gray-500"><span id="cart-bids">0</span> BIDS</div>
+                <div class="font-black text-xl leading-none text-[#ffbe1a] din" id="cart-total">₹0.00</div>
+                <div class="text-[10px] text-gray-400 mt-1"><span id="cart-bids" class="font-bold">0</span> BIDS</div>
             </div>
         </div>
-        <button class="bg-green-500 text-white font-bold px-8 py-3 rounded-lg shadow-sm active:bg-green-600" id="pay-btn" onclick="payNow()">Pay Now</button>
+        <button class="bg-gradient-to-r from-amber-400 to-amber-600 text-black font-black px-8 py-3 rounded-lg shadow-md active:scale-95 transition-all" id="pay-btn" onclick="payNow()">Pay Now</button>
     </div>
 
     <div id="toast"></div>
@@ -349,24 +443,24 @@
 
             if (window.userSession && window.userSession.isAuthenticated) {
                 container.innerHTML = `
-                    <div class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">
-                        <span class="text-gray-500">👤 ${window.userSession.username}</span>
-                        <span class="text-green-600">₹${window.userSession.balance.toFixed(2)}</span>
-                        <button onclick="handleSignOut(event)" class="text-red-500 hover:text-red-600 ml-1 transition-colors">Sign Out</button>
+                    <div class="flex items-center gap-2 bg-white/10 border border-amber-500/20 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm text-white">
+                        <span class="text-gray-300">👤 ${window.userSession.username}</span>
+                        <span class="text-amber-400 font-extrabold">₹${window.userSession.balance.toFixed(2)}</span>
+                        <button onclick="handleSignOut(event)" class="text-red-400 hover:text-red-500 ml-1 transition-colors font-bold">Sign Out</button>
                     </div>
                 `;
             } else {
                 const token = localStorage.getItem('supabase.auth.token') || localStorage.getItem('sb-auth-token');
                 if (token) {
                     container.innerHTML = `
-                        <div class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">
-                            <span class="text-gray-500">👤 Signed In</span>
-                            <button onclick="handleSignOut(event)" class="text-red-500 hover:text-red-600 ml-1 transition-colors">Sign Out</button>
+                        <div class="flex items-center gap-2 bg-white/10 border border-amber-500/20 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm text-white">
+                            <span class="text-gray-300">👤 Signed In</span>
+                            <button onclick="handleSignOut(event)" class="text-red-400 hover:text-red-500 ml-1 transition-colors font-bold">Sign Out</button>
                         </div>
                     `;
                 } else {
                     container.innerHTML = `
-                        <button onclick="window.location.href='/user/login-form/'" class="btn-green px-4 py-1.5 rounded-lg font-bold text-sm">Sign In</button>
+                        <button onclick="window.location.href='/user/login-form/'" class="bg-gradient-to-r from-amber-400 to-amber-600 text-black px-4 py-1.5 rounded-lg font-bold text-sm shadow-md active:scale-95 transition-all">Sign In</button>
                     `;
                 }
             }

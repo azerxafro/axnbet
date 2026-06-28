@@ -1,189 +1,123 @@
-<head><style id="react-aria-pressable-style">
-
-@layer {
-  [data-react-aria-pressable] {
-    touch-action: pan-x pan-y pinch-zoom;
-  }
-}
-
-</style>
+<head>
     <title>Sign Up</title>
     <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
- 
- 
-   <link rel="stylesheet" href="/dd.css">
-
-
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="/dd.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif !important;
+            background: radial-gradient(circle at top, #1c0e35 0%, #080512 100%) !important;
+            color: #e2dcfc !important;
+            margin: 0;
+            padding: 0;
+        }
+        .register-container {
+            background: rgba(28, 18, 48, 0.65) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border: 1px solid rgba(255, 215, 0, 0.15) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(140, 91, 255, 0.1) !important;
+            border-radius: 20px !important;
+            padding: 24px !important;
+        }
+        .input-field-group {
+            background: rgba(16, 9, 28, 0.8) !important;
+            border: 1px solid rgba(140, 91, 255, 0.4) !important;
+            border-radius: 10px !important;
+            color: #ffffff !important;
+        }
+        .input-field-group:focus-within {
+            border-color: #ffbe1a !important;
+            box-shadow: 0 0 12px rgba(255, 190, 26, 0.4) !important;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #FFE27C 0%, #FFBE1A 30%, #D4AF37 70%, #AA7C11 100%) !important;
+            color: #0c0817 !important;
+            font-weight: 900 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            box-shadow: 0 4px 15px rgba(255, 190, 26, 0.4) !important;
+            border-radius: 9999px !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .submit-btn:disabled {
+            opacity: 0.35 !important;
+            background: rgba(140, 91, 255, 0.2) !important;
+            color: rgba(255, 255, 255, 0.4) !important;
+            box-shadow: none !important;
+        }
+        svg path {
+            stroke: #a7a3c0 !important;
+        }
+    </style>
 </head>
+<body class="min-h-screen flex flex-col justify-center">
+  <div class="flex flex-col p-5 w-full max-w-md mx-auto">
+      
+      <!-- Back Button -->
+      <div class="mb-4">
+         <button onclick="window.location.href='/'" class="p-2 text-white font-bold flex items-center gap-1">❮ Back</button>
+      </div>
 
-
- <div id="root" class="w-full h-full flex flex-col overflow-hidden *:overflow-hidden! *:touch-none!">
       <link rel="stylesheet" href="/assets/global/css/iziToast.min.css">
-<script src="/assets/global/js/iziToast.min.js"></script>
+      <script src="/assets/global/js/iziToast.min.js"></script>
 
-<script>
-    "use strict";
-    function notify(status,message) {
-        iziToast[status]({
-            message: message,
-            position: "topRight"
-        });
-    }
-</script>
+      <script>
+          "use strict";
+          function notify(status,message) {
+              iziToast[status]({
+                  message: message,
+                  position: "topRight"
+              });
+          }
+      </script>
 
-      <div data-overlay-container="true">
-         <div class="z-10 aria-expanded:scale-[0.97] aria-expanded:opacity-70 subpixel-antialiased fixed bottom-20 left-1/2 size-0" data-slot="trigger" aria-haspopup="dialog" aria-expanded="false" type="button" tabindex="0" data-react-aria-pressable="true"></div>
-         <div class="flex flex-col bg-white h-dvh font-normal text-main bg-contain bg-no-repeat"  style="background-image: url(/back.webp);">
-            <div class="flex flex-col w-full bg-white relative z-40" style="background: rgba(0, 0, 0, 0); box-shadow: none;">
-               <div style="height: 0px;"></div>
-               <div class="w-full h-11 flex flex-row items-center relative z-50">
-                  <div class="absolute top-0 left-0 h-full pl-3 flex items-center rtl:left-auto rtl:right-0 rtl:pl-0 rtl:pr-3">
-                     <div class="mr-2 rtl:mr-0 rtl:ml-2" onclick="history.back()">
-                        <svg class="size-4 text-main rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
-                           <path d="M10.5 2L5 7.99676L10.5 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                     </div>
-                     <div class="h-full flex items-center"></div>
-                     <div class="font-bold text-main">Account register</div>
-                  </div>
-                  <div class="absolute top-0 right-0 h-full pr-3 flex items-center rtl:right-auto rtl:left-0 rtl:pr-0 rtl:pl-3">
-                     <div class="h-full flex items-center">
-                        <div class="">
-                           <svg class="size-6 text-main" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M20.7225 10.5819C20.6641 5.81223 16.784 1.96265 12 1.96265C7.21607 1.96265 3.33597 5.81223 3.2774 10.5819C2.4767 11.222 1.96265 12.2049 1.96265 13.3093C1.96265 15.2371 3.52586 16.8007 5.4539 16.8007C6.29528 16.8007 7.06682 16.5025 7.66954 16.0072L6.02469 9.8684C5.83839 9.83807 5.64864 9.81789 5.45392 9.81789C5.32562 9.81789 5.19951 9.82583 5.07463 9.83959C5.49543 6.38608 8.43247 3.70832 12.0001 3.70832C15.5673 3.70832 18.5048 6.38605 18.9255 9.83959C18.8011 9.82593 18.6746 9.81789 18.5462 9.81789C18.3516 9.81789 18.1614 9.83811 17.975 9.8684L16.3306 16.0044C16.7958 16.3863 17.3614 16.6503 17.982 16.7513C17.1584 17.6361 16.1111 18.3101 14.9263 18.6747L14.7818 18.819C14.4122 18.1396 13.7008 17.6731 12.873 17.6731C11.6677 17.6731 10.6909 18.6498 10.6909 19.8556C10.6909 21.061 11.6676 22.0377 12.873 22.0377C13.8623 22.0377 14.6875 21.3751 14.9555 20.473C17.3637 19.8827 19.3811 18.2974 20.54 16.1727C21.4445 15.5418 22.0376 14.4955 22.0376 13.3092C22.0375 12.2051 21.523 11.2219 20.7227 10.5818L20.7225 10.5819Z" fill="currentColor"></path>
-                           </svg>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-          <br>
-               <div class="flex flex-col mb-5">
-            <center>
-          <span class="text-3xl font-bold mb-2">Register Account</span></center>
-          <!--<span>Member account <br> If you forgot your password, please contact customer service.</span>-->
-        </div>
+      <!-- Register Form Container -->
+      <div class="register-container">
+          <div class="flex flex-col mb-6 text-center">
+              <span class="text-3xl font-black text-white tracking-wide">Register Account</span>
+          </div>
+          
+          <form class="account-form" action="/user/register-form" method="POST">
+              <input type="hidden" name="_token" value="h2JntANvmFaA2095OAXuBZlsAmmeeDQQbOxLDkpD">
               
+              <!-- Phone Input -->
+              <div class="input-field-group relative w-full inline-flex flex-row items-center gap-3 h-14 p-4">
+                  <span class="pr-2 border-purple-500/30 border-r text-gray-300 font-bold">+91</span>
+                  <input name="mobile_code" type="hidden" value="+91">
+                  <input name="country_code" type="hidden" value="IN">
+                  <input class="w-full bg-transparent outline-none text-white font-bold"
+                         aria-label="Please enter phone number" maxlength="10" minlength="10" pattern="[0-9]{10}"
+                         placeholder="Please enter phone number" id="mobile" name="mobile" type="text" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+              </div>
               
+              <!-- Invite Code -->
+              <div class="input-field-group relative w-full inline-flex flex-row items-center gap-3 h-14 p-4 mt-3">
+                  <input class="w-full bg-transparent outline-none text-white font-bold"
+                         aria-label="Invite Code (Optional)" placeholder="Invite Code (Optional)" id="referenceBy" name="referBy" type="text" />
+              </div>
               
-               <div class="data-[top-scroll=true]:[mask-image:linear-gradient(0deg,#000_calc(100%_-_var(--scroll-shadow-size)),transparent)] data-[bottom-scroll=true]:[mask-image:linear-gradient(180deg,#000_calc(100%_-_var(--scroll-shadow-size)),transparent)] data-[top-bottom-scroll=true]:[mask-image:linear-gradient(#000,#000,transparent_0,#000_var(--scroll-shadow-size),#000_calc(100%_-_var(--scroll-shadow-size)),transparent)] flex flex-col p-5 flex-1 overflow-auto" data-orientation="vertical" style="--scroll-shadow-size: 40px;" data-top-scroll="true" data-bottom-scroll="false">
-              <form class="account-form" action="/user/register-form" method="POST">
-                            <input type="hidden" name="_token" value="h2JntANvmFaA2095OAXuBZlsAmmeeDQQbOxLDkpD">               <div class="group flex flex-col data-[hidden=true]:hidden w-full relative justify-end data-[has-label=true]:mt-[calc(var(--heroui-font-size-small)_+_10px)] bg-white rounded-[10px]" data-slot="base" data-filled="true" data-filled-within="true">
-                  <div data-slot="main-wrapper" class="h-full flex flex-col">
-                     <div data-slot="input-wrapper" class="relative w-full inline-flex tap-highlight-transparent flex-row items-center gap-3 bg-default-100 data-[hover=true]:bg-default-200 group-data-[focus=true]:bg-default-100 min-h-10 transition-background motion-reduce:transition-none !duration-150 outline-solid outline-transparent group-data-[focus-visible=true]:z-10 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[focus-visible=true]:ring-offset-2 group-data-[focus-visible=true]:ring-offset-background shadow-none border border-gray data-[focus=true]:border-primary rounded-[10px] h-14 p-4" style="cursor: text;">
-                        <div data-slot="inner-wrapper" class="inline-flex w-full items-center h-full box-border"><span class="pr-2 border-gray border-r text-main rtl:border-r-0 rtl:border-l rtl:pr-0 rtl:pl-2">
-                            +91</span>
-                            <input name="mobile_code" type="hidden" value="+91">
-                                        <input name="country_code" type="hidden" value="IN">
-     <input data-slot="input"  data-has-start-content="true" 
-                  class="w-full font-normal bg-transparent !outline-solid focus-visible:outline-solid outline-transparent data-[has-start-content=true]:ps-1.5 data-[has-end-content=true]:pe-1.5 data-[type=color]:rounded-none file:cursor-pointer file:bg-transparent file:border-0 autofill:bg-transparent bg-clip-text text-small group-data-[has-value=true]:text-default-foreground placeholder:text-acctext-sm"
-                  aria-label="Please enter phone number"maxlength="10" minlength="10"pattern="[0-9]{10}"
-                  placeholder="Please enter phone number" id="mobile" name="mobile" type="text" value="" required oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                />
-</div>
-                     </div>
-                  </div>
-               </div>
-               
-               
-                                <div class="my-3">
-                   <div class="group flex flex-col data-[hidden=true]:hidden w-full relative justify-end data-[has-label=true]:mt-[calc(var(--heroui-font-size-small)_+_10px)] bg-white rounded-[10px]" data-slot="base" data-filled="true" data-filled-within="true">
-                  <div data-slot="main-wrapper" class="h-full flex flex-col">
-                     <div data-slot="input-wrapper" class="relative w-full inline-flex tap-highlight-transparent flex-row items-center gap-3 bg-default-100 data-[hover=true]:bg-default-200 group-data-[focus=true]:bg-default-100 min-h-10 transition-background motion-reduce:transition-none !duration-150 outline-solid outline-transparent group-data-[focus-visible=true]:z-10 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[focus-visible=true]:ring-offset-2 group-data-[focus-visible=true]:ring-offset-background shadow-none border border-gray data-[focus=true]:border-primary rounded-[10px] h-14 p-4" style="cursor: text;">
-                        <div data-slot="inner-wrapper" class="inline-flex w-full items-center h-full box-border">
-                           <div class="mr-1.5 rtl:mr-0 rtl:ml-1.5">
-                              <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 1.125rem; height: 1.125rem;">
-                                 <g clip-path="url(#clip0_2914_16287)">
-                                    <path d="M9.08824 12.2151C9.08824 12.3029 9.16324 12.3748 9.25368 12.3748H13.3346C13.425 12.3748 13.5 12.3029 13.5 12.2151V11.2565C13.5 11.1687 13.425 11.0968 13.3346 11.0968H9.25368C9.16324 11.0968 9.08824 11.1687 9.08824 11.2565V12.2151ZM4.78897 12.3369L9.02426 9.12181C9.10809 9.05791 9.10809 8.94009 9.02426 8.87619L4.78897 5.6631C4.67426 5.57524 4.5 5.64912 4.5 5.78492V7.037C4.5 7.08493 4.52206 7.12886 4.56397 7.15881L6.98603 9L4.56397 10.8412C4.52426 10.8711 4.5 10.9171 4.5 10.963V12.2151C4.5 12.3509 4.67426 12.4248 4.78897 12.3369Z" fill="#848491"></path>
-                                    <path d="M17.28 0H0.72C0.32175 0 0 0.32175 0 0.72V17.28C0 17.6783 0.32175 18 0.72 18H17.28C17.6783 18 18 17.6783 18 17.28V0.72C18 0.32175 17.6783 0 17.28 0ZM16.38 14.38C16.38 15.4846 15.4846 16.38 14.38 16.38H3.62C2.51543 16.38 1.62 15.4846 1.62 14.38V3.62C1.62 2.51543 2.51543 1.62 3.62 1.62H14.38C15.4846 1.62 16.38 2.51543 16.38 3.62V14.38Z" fill="#848491"></path>
-                                 </g>
-                                 <defs>
-                                    <clipPath id="clip0_2914_16287">
-                                       <rect fill="white" style="width: 1.125rem; height: 1.125rem;"></rect>
-                                    </clipPath>
-                                 </defs>
-                              </svg>
-                           </div>
-                           <input data-slot="input" data-has-start-content="true" class="w-full font-normal bg-transparent !outline-solid focus-visible:outline-solid outline-transparent data-[has-start-content=true]:ps-1.5 data-[has-end-content=true]:pe-1.5 data-[type=color]:rounded-none file:cursor-pointer file:bg-transparent file:border-0 autofill:bg-transparent bg-clip-text text-small group-data-[has-value=true]:text-default-foreground placeholder:text-acctext-sm" data-has-helper="false" aria-label="Invite Code(Optional)" placeholder="Invite Code(Optional)" tabindex="0" id="react-aria7059532862-«r2c»" type="text" id="referenceBy" 
-                   id="referenceBy" 
-                    name="referBy" 
-                    type="text" 
-                    placeholder="Enter Reference (Optional)"
-                        </div>
-                     </div>
-                  </div>
-                               
-               <div class="my-3">
-                  <div class="group flex flex-col data-[hidden=true]:hidden w-full relative justify-end data-[has-label=true]:mt-[calc(var(--heroui-font-size-small)_+_10px)] bg-white rounded-[10px]" data-slot="base" data-filled="true" data-filled-within="true">
-                     <div data-slot="main-wrapper" class="h-full flex flex-col">
-                        <div data-slot="input-wrapper" class="relative w-full inline-flex tap-highlight-transparent flex-row items-center gap-3 bg-default-100 data-[hover=true]:bg-default-200 group-data-[focus=true]:bg-default-100 min-h-10 transition-background motion-reduce:transition-none !duration-150 outline-solid outline-transparent group-data-[focus-visible=true]:z-10 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[focus-visible=true]:ring-offset-2 group-data-[focus-visible=true]:ring-offset-background shadow-none border border-gray data-[focus=true]:border-primary rounded-[10px] h-14 p-4" style="cursor: text;">
-                           <div data-slot="inner-wrapper" class="inline-flex w-full items-center h-full box-border">
-                              <div class="mr-0.5 rtl:mr-0 rtl:ml-0.5">
-                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 1.5rem; height: 1.5rem;">
-                                    <path d="M18.375 9.75H17.625V7.125C17.625 5.63316 17.0324 4.20242 15.9775 3.14752C14.9226 2.09263 13.4918 1.5 12 1.5C10.5082 1.5 9.07742 2.09263 8.02252 3.14752C6.96763 4.20242 6.375 5.63316 6.375 7.125V9.75H5.625C5.02826 9.75 4.45597 9.98705 4.03401 10.409C3.61205 10.831 3.375 11.4033 3.375 12V13.875C3.375 16.1625 4.2837 18.3563 5.9012 19.9738C7.5187 21.5913 9.71251 22.5 12 22.5C14.2875 22.5 16.4813 21.5913 18.0988 19.9738C19.7163 18.3563 20.625 16.1625 20.625 13.875V12C20.625 11.7045 20.5668 11.4119 20.4537 11.139C20.3407 10.866 20.1749 10.6179 19.966 10.409C19.7571 10.2001 19.509 10.0343 19.236 9.92127C18.9631 9.8082 18.6705 9.75 18.375 9.75ZM8.625 7.125C8.625 6.22989 8.98058 5.37145 9.61351 4.73851C10.2464 4.10558 11.1049 3.75 12 3.75C12.8951 3.75 13.7535 4.10558 14.3865 4.73851C15.0194 5.37145 15.375 6.22989 15.375 7.125V9.75H8.625V7.125ZM12.75 16.5C12.75 16.6989 12.671 16.8897 12.5303 17.0303C12.3897 17.171 12.1989 17.25 12 17.25C11.8011 17.25 11.6103 17.171 11.4697 17.0303C11.329 16.8897 11.25 16.6989 11.25 16.5V13.5C11.25 13.3011 11.329 13.1103 11.4697 12.9697C11.6103 12.829 11.8011 12.75 12 12.75C12.1989 12.75 12.3897 12.829 12.5303 12.9697C12.671 13.1103 12.75 13.3011 12.75 13.5V16.5Z" fill="#979797"></path>
-                                 </svg>
-                              </div>
-                              <input data-slot="input" data-has-start-content="true" data-has-end-content="true" data-type="password" class="w-full font-normal bg-transparent !outline-solid focus-visible:outline-solid outline-transparent data-[has-start-content=true]:ps-1.5 data-[has-end-content=true]:pe-1.5 data-[type=color]:rounded-none file:cursor-pointer file:bg-transparent file:border-0 autofill:bg-transparent bg-clip-text text-small group-data-[has-value=true]:text-default-foreground placeholder:text-acctext-sm [&amp;::-ms-reveal]:hidden" data-has-helper="false" aria-label="Comfirm password" maxlength="18" placeholder="Enter password" tabindex="0" id="react-aria7059532862-«r27»" 
-                              id="password" name="password" type="password" required>
-                                                              <!--<div class="size-5">-->
-                              <!--   <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 1.25rem; height: 1.25rem;">-->
-                              <!--      <path fill-rule="evenodd" clip-rule="evenodd" d="M2.97712 2L1.87793 3.08126L16.0226 17L17.1218 15.9184L2.97712 2Z" fill="black" fill-opacity="0.6"></path>-->
-                              <!--      <path d="M4.20032 5.36632L5.23492 6.38437C4.10236 7.33326 3.20051 8.5144 2.61773 9.54781L2.61595 9.5513C4.23901 12.2216 6.81431 14.7453 10.0647 14.3625C10.942 14.2591 11.7605 13.964 12.5083 13.5418L13.5557 14.572C12.098 15.4926 10.4271 15.9802 8.6166 15.7392C5.35204 15.3047 2.68268 12.67 1 9.57575C1.79005 8.01149 2.87079 6.51498 4.20032 5.36632ZM6.55345 3.85759C7.4663 3.45736 8.45405 3.22197 9.50887 3.2052C9.56744 3.20485 10.2627 3.23733 10.5779 3.28832C10.7756 3.32045 10.9726 3.36062 11.1667 3.41056C14.2634 4.20439 16.5576 6.78041 18 9.43431C17.3949 10.6368 16.6023 11.8102 15.6572 12.8157L14.6538 11.8284C15.3519 11.088 15.934 10.2638 16.3823 9.46434C16.3823 9.46434 15.9315 8.75119 15.5897 8.30346C15.37 8.01568 15.139 7.73629 14.8962 7.46702C14.7046 7.25468 13.9603 6.53349 13.7832 6.38332C12.5949 5.37785 11.1997 4.58891 9.52626 4.60218C8.87818 4.6123 8.25494 4.73803 7.66328 4.94967L6.55345 3.85759Z" fill="black" fill-opacity="0.6"></path>-->
-                              <!--      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.01632 8.13802L7.81499 8.9236L10.8892 11.9486C10.4782 12.1756 10.004 12.3048 9.4997 12.3048C7.92917 12.3048 6.6543 11.0504 6.6543 9.50496C6.6543 9.00869 6.78597 8.54245 7.01632 8.13802ZM9.44717 6.70578C9.46456 6.70543 9.48231 6.70508 9.4997 6.70508C11.0702 6.70508 12.3451 7.95991 12.3451 9.50496C12.3451 9.52242 12.3451 9.53954 12.3447 9.55665L9.44717 6.70578Z" fill="black" fill-opacity="0.6"></path>-->
-                              <!--   </svg>-->
-                              <!--</div>-->
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               
-               <br>
-               <button type="submit"  data-react-aria-pressable="true"
-               class="z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap subpixel-antialiased overflow-hidden tap-highlight-transparent 
-               transform-gpu data-[pressed=true]:scale-[0.97] cursor-pointer outline-solid outline-transparent data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 gap-2   [&amp;&gt;svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none data-[hover=true]:opacity-hover h-13 text-white text-base font-semibold shrink-0 rounded-full bg-linear-primary-tr disabled:opacity-30" 
-               style="background: linear-gradient(to right, #0984e3, #00D4FF);box-shadow: rgba(0, 153, 235, 0.5) 0px 4px 12px 0px;">Register</button>
-               <div class="mt-2 flex justify-center" id="google-sign-in-button">
-                  <div class="S9gUrf-YoZ4jf" style="position: relative;">
-                     <div></div>
-                    
-                  </div>
-               </div><br>
-<div style="text-align:center; margin-top:1rem; font-weight:600; color:#0099EB; font-size:1rem;">
-  Already have an account?
-</div>
-<br>
-<div
-  onclick="window.location.href='/user/login-form'"
-  style="
-    background: linear-gradient(to right, #0984e3, #00D4FF);
-    box-shadow: rgba(0, 153, 235, 0.5) 0px 4px 12px 0px;
-    color: white;
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 9999px;
-    width: 100%;
-    height: 3.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-  "
-  onmouseover="this.style.opacity='0.85'"
-  onmouseout="this.style.opacity='1'"
-  onmousedown="this.style.transform='scale(0.97)'"
-  onmouseup="this.style.transform='scale(1)'"
->
-  Sign in
-</div>
-
-
-
-            </div>
-         </div>
+              <!-- Password Input -->
+              <div class="input-field-group relative w-full inline-flex flex-row items-center gap-3 h-14 p-4 mt-3">
+                  <input class="w-full bg-transparent outline-none text-white font-bold"
+                         aria-label="Enter Password" placeholder="Enter Password" id="password" name="password" type="password" required />
+              </div>
+              
+              <button type="submit" class="mt-6 w-full h-13 submit-btn text-base font-extrabold active:scale-[0.98] transition-all">
+                  Register
+              </button>
+          </form>
+          
+          <!-- Already have account link -->
+          <div class="text-center text-sm font-semibold mt-6 pt-4 border-t border-purple-500/20">
+              <div class="text-gray-400 mb-3">Already have an account?</div>
+              <button type="button" onclick="window.location.href='/user/login-form'" class="w-full py-3 border border-amber-500/40 text-amber-400 font-extrabold rounded-full hover:bg-amber-500/10 active:scale-[0.98] transition-all">
+                  Sign In
+              </button>
+          </div>
+      </div>
+  </div>
          <div _nk="UVSV21" style="display: none;"></div>
       </div>
    </div>

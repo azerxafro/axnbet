@@ -36,29 +36,23 @@ let userSession = {
 
 let tickets = [];
 let chats = [
-    { username: 'Lottery_King', message: 'Got a 3D win on Goa King today! 🎉', time: '10 mins ago' },
+    { username: 'Lottery_King', message: 'Got a 3D win on Dear Lottery 8PM today! 🎉', time: '10 mins ago' },
     { username: 'Rajesh_K', message: 'Is Dear 8PM result out yet?', time: '5 mins ago' },
-    { username: 'Admin_Support', message: 'Welcome to AXN Agency! Live chat is open.', time: 'Just now' }
+    { username: 'Admin_Support', message: 'Welcome to bet999x! Live chat is open.', time: 'Just now' }
 ];
 
 // Draw Results State (Starts with historical data, appends live draws)
 let drawResults = [
-    { name: '5D', cycle: 1000, numbers: '2,4,1,7,8', time: 'Yesterday, 8:15 PM' },
-    { name: 'Dear Lottery 8PM', cycle: 267, numbers: '357', time: 'Yesterday, 8:00 PM' },
-    { name: 'Goa King Lottery', cycle: 270, numbers: '902', time: 'Yesterday, 7:00 PM' },
-    { name: 'Dubai 3Digit Lottery', cycle: 59, numbers: '148', time: 'Yesterday, 6:00 PM' }
+    { name: 'Dear Lottery 8PM', cycle: 307, numbers: '357', time: 'Yesterday, 8:00 PM' },
+    { name: 'Dear Lottery 6PM', cycle: 306, numbers: '241', time: 'Yesterday, 6:00 PM' },
+    { name: 'Kerala Lottery 3PM', cycle: 308, numbers: '902', time: 'Yesterday, 3:00 PM' }
 ];
 
 // Active Cycle Tracking — keyed by lottery name for stable lookups
 let activeCycles = {
-    'Dear Lottery 8PM': { name: 'Dear Lottery 8PM', price: 100, cycle: 268 },
-    'Goa King Lottery': { name: 'Goa King Lottery', price: 150, cycle: 271 },
-    'Dear Lottery 6PM': { name: 'Dear Lottery 6PM', price: 100, cycle: 272 },
-    'Dubai 3Digit Lottery': { name: 'Dubai 3Digit Lottery', price: 200, cycle: 60 },
-    'Quick3D 3Min': { name: 'Quick3D 3Min', price: 50, cycle: 3 },
-    'Quick3D 5Min': { name: 'Quick3D 5Min', price: 50, cycle: 5 },
-    'Run Guess': { name: 'Run Guess', price: 50, cycle: 88 },
-    '5D': { name: '5D', price: 10, cycle: 1001 }
+    'Dear Lottery 6PM': { name: 'Dear Lottery 6PM', price: 12, cycle: 307 },
+    'Dear Lottery 8PM': { name: 'Dear Lottery 8PM', price: 12, cycle: 308 },
+    'Kerala Lottery 3PM': { name: 'Kerala Lottery 3PM', price: 12, cycle: 309 }
 };
 
 // --- Persistence Logic ---
@@ -97,7 +91,7 @@ function getLotteryByCycle(cycle) {
             return activeCycles[key];
         }
     }
-    return { name: 'AXN Daily Lottery', price: 100, cycle: cycleNum };
+    return { name: 'bet999x Daily Lottery', price: 12, cycle: cycleNum };
 }
 
 // Helper to get all active cycle options for the admin dropdown
@@ -230,13 +224,12 @@ app.get('/user/results/index', (req, res) => {
         
         let colorClass = 'from-[#8C5BFF] to-[#4400B1]'; // Default Dear purple
         if (r.name.includes('Goa')) colorClass = 'from-[#00A8FF] to-[#0047EC]'; // Goa blue
-        if (r.name.includes('Dubai')) colorClass = 'from-[#FF5E3A] to-[#FF2A68]'; // Dubai red/orange
         
         return `
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray/50 flex flex-col gap-2 mb-3">
                 <div class="flex items-center justify-between border-b border-gray/30 pb-2">
-                    <span class="font-bold text-base text-gray-800">${r.name}</span>
-                    <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">Completed</span>
+                    <span class="font-extrabold text-base text-[#ffbe1a] tracking-wide">${r.name}</span>
+                    <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">Completed</span>
                 </div>
                 <div class="flex items-center justify-between mt-1">
                     <div>
@@ -244,9 +237,9 @@ app.get('/user/results/index', (req, res) => {
                         <p class="text-xs text-gray-400">Drawn: ${r.time}</p>
                     </div>
                     <div class="flex gap-1.5">
-                        <span class="w-8 h-8 rounded-full bg-linear-to-b ${colorClass} text-white flex items-center justify-center font-bold shadow-md">${num1}</span>
-                        <span class="w-8 h-8 rounded-full bg-linear-to-b ${colorClass} text-white flex items-center justify-center font-bold shadow-md">${num2}</span>
-                        <span class="w-8 h-8 rounded-full bg-linear-to-b ${colorClass} text-white flex items-center justify-center font-bold shadow-md">${num3}</span>
+                        <span class="w-8 h-8 rounded-full bg-linear-to-b ${colorClass} text-white flex items-center justify-center font-black shadow-[0_0_12px_rgba(255,215,0,0.3)] border border-[rgba(255,215,0,0.3)]">${num1}</span>
+                        <span class="w-8 h-8 rounded-full bg-linear-to-b ${colorClass} text-white flex items-center justify-center font-black shadow-[0_0_12px_rgba(255,215,0,0.3)] border border-[rgba(255,215,0,0.3)]">${num2}</span>
+                        <span class="w-8 h-8 rounded-full bg-linear-to-b ${colorClass} text-white flex items-center justify-center font-black shadow-[0_0_12px_rgba(255,215,0,0.3)] border border-[rgba(255,215,0,0.3)]">${num3}</span>
                     </div>
                 </div>
             </div>
@@ -256,8 +249,8 @@ app.get('/user/results/index', (req, res) => {
     res.send(`
         <div class="flex flex-col p-4 pb-20 w-full min-h-screen text-main bg-[#F6F9FF]">
             <div class="flex items-center justify-between mb-4 mt-2">
-                <span class="text-xl font-extrabold text-[#0B1530]">Draw Results</span>
-                <button onclick="document.getElementById('footerResultTab').click()" class="p-2 bg-white rounded-full shadow-sm text-primary">
+                <span class="text-xl font-extrabold text-[#ffbe1a] tracking-tight">Draw Results</span>
+                <button onclick="loadTab('Result', '/user/results/index')" class="p-2 bg-white rounded-full shadow-sm text-amber-500">
                     <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3-3 3 3m-3-3v12"/></svg>
                 </button>
             </div>
@@ -279,32 +272,32 @@ app.get('/user/tofactor-dashboard-new', (req, res) => {
     
     res.send(`
         <div class="flex flex-col p-5 pb-20 w-full min-h-screen text-main bg-[#F6F9FF] font-sans">
-            <div class="w-full bg-linear-to-r from-[#0984e3] to-[#00D4FF] rounded-2xl p-5 text-white shadow-lg flex flex-col gap-4 relative overflow-hidden mb-5">
-                <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+            <div class="w-full bg-gradient-to-br from-[#2c1a4d] via-[#1a0f30] to-[#0c0817] rounded-2xl p-5 text-white border border-amber-500/20 shadow-[0_0_20px_rgba(255,215,0,0.15)] flex flex-col gap-4 relative overflow-hidden mb-5">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
                 <div class="flex items-center gap-3">
-                    <div class="size-12 bg-white/20 rounded-full flex items-center justify-center font-extrabold text-xl">
+                    <div class="size-12 bg-amber-500/20 text-[#ffbe1a] border border-amber-500/30 rounded-full flex items-center justify-center font-extrabold text-xl shadow-[0_0_10px_rgba(255,190,26,0.2)]">
                         👤
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-bold text-lg">${userSession.username}</span>
-                        <span class="text-xs text-white/80">${userDisplayPhone} • ${statusText}</span>
+                        <span class="font-bold text-lg text-white">${userSession.username}</span>
+                        <span class="text-xs text-gray-400">${userDisplayPhone} • <span class="text-green-400 font-bold">${statusText}</span></span>
                     </div>
                 </div>
                 
                 <div class="flex justify-between items-end mt-2">
                     <div class="flex flex-col">
-                        <span class="text-xs text-white/80">Available Balance</span>
-                        <span class="text-3xl font-black mt-1">₹${userSession.balance.toFixed(2)}</span>
+                        <span class="text-xs text-gray-400">Available Balance</span>
+                        <span class="text-3xl font-black mt-1 text-[#ffbe1a] tracking-tight din">₹${userSession.balance.toFixed(2)}</span>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="handleDeposit()" class="px-4 py-2 bg-white text-primary font-bold rounded-lg text-sm shadow-sm active:scale-95 transition-all">Deposit</button>
-                        <button onclick="handleWithdraw()" class="px-4 py-2 bg-white/20 text-white font-bold rounded-lg text-sm active:scale-95 transition-all">Withdraw</button>
+                        <button onclick="handleDeposit()" class="px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-600 text-black font-extrabold rounded-lg text-sm shadow-md active:scale-95 transition-all">Deposit</button>
+                        <button onclick="handleWithdraw()" class="px-4 py-2 bg-white/10 text-white hover:bg-white/20 border border-white/20 font-bold rounded-lg text-sm active:scale-95 transition-all">Withdraw</button>
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-col gap-3">
-                <div class="bg-white rounded-xl p-4 shadow-xs border border-gray/40 flex items-center justify-between cursor-pointer" onclick="window.location.href='/user/mybets-3digit'">
+                <div class="bg-white rounded-xl p-4 shadow-xs border border-gray/40 flex items-center justify-between cursor-pointer" onclick="loadTab('Tickets', '/user/mybets-3digit')">
                     <div class="flex items-center gap-3">
                         <span class="text-lg">🎟️</span>
                         <span class="font-semibold text-gray-700">My Betting Records</span>
@@ -343,7 +336,7 @@ app.get('/user/tofactor-dashboard-new', (req, res) => {
                         .then(res => res.json())
                         .then(data => {
                             alert(window.convertCurrencyText ? window.convertCurrencyText(data.message) : data.message);
-                            document.getElementById("footerMeTab").click();
+                            loadTab('Me', '/user/tofactor-dashboard-new');
                         });
                     }
                 }
@@ -363,7 +356,7 @@ app.get('/user/tofactor-dashboard-new', (req, res) => {
                         .then(res => res.json())
                         .then(data => {
                             alert(window.convertCurrencyText ? window.convertCurrencyText(data.message) : data.message);
-                            document.getElementById("footerMeTab").click();
+                            loadTab('Me', '/user/tofactor-dashboard-new');
                         });
                     }
                 }
@@ -387,16 +380,16 @@ app.get('/chat', (req, res) => {
         return res.sendFile(path.join(__dirname, 'user', 'login-form', 'index.html'));
     }
     let chatMessagesHTML = chats.map(c => `
-        <div class="flex flex-col bg-white p-3 rounded-xl shadow-xs border border-gray/30 max-w-[85%] mb-2">
-            <span class="text-xs text-primary font-bold">${c.username}</span>
-            <span class="text-sm mt-0.5 text-gray-800">${c.message}</span>
+        <div class="flex flex-col bg-[#24173d]/60 border border-[rgba(255,215,0,0.15)] backdrop-blur-md p-3 rounded-xl shadow-xs max-w-[85%] mb-2">
+            <span class="text-xs text-amber-400 font-bold">${c.username}</span>
+            <span class="text-sm mt-0.5 text-white">${c.message}</span>
             <span class="text-[10px] text-gray-400 text-right mt-1">${c.time}</span>
         </div>
     `).join('');
 
     res.send(`
         <div class="flex flex-col p-4 pb-20 w-full min-h-screen text-main bg-[#F6F9FF] font-sans">
-            <div class="text-xl font-extrabold text-[#0B1530] mb-3">Live Discussion</div>
+            <div class="text-xl font-extrabold text-[#ffbe1a] mb-3">Live Discussion</div>
             
             <div id="chatMessages" class="flex-1 overflow-y-auto mb-4 p-2 flex flex-col items-start min-h-[300px] max-h-[450px]">
                 ${chatMessagesHTML}
@@ -423,7 +416,11 @@ app.get('/chat', (req, res) => {
                     .then(data => {
                         if (data.success) {
                             input.value = '';
-                            document.getElementById("footerJoinMeTab").click();
+                            if (window.loadTab) {
+                                window.loadTab('Chat', '/chat');
+                            } else {
+                                window.location.reload();
+                            }
                         } else {
                             alert(data.message);
                         }
@@ -452,54 +449,121 @@ function renderDetailPage(req, res, name, cycle, price) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>${name} - Booking</title>
             <link rel="stylesheet" href="/dd.css">
+            <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script src="/currency.js"></script>
+            <style>
+                body {
+                    font-family: 'Outfit', sans-serif !important;
+                    background: radial-gradient(circle at top, #1c0e35 0%, #080512 100%) !important;
+                    color: #e2dcfc !important;
+                }
+                .header-bar {
+                    background: rgba(18, 10, 30, 0.9) !important;
+                    backdrop-filter: blur(16px) !important;
+                    -webkit-backdrop-filter: blur(16px) !important;
+                    border-bottom: 1px solid rgba(255, 215, 0, 0.15) !important;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+                }
+                .casino-card {
+                    background: rgba(28, 18, 48, 0.65) !important;
+                    backdrop-filter: blur(16px) !important;
+                    -webkit-backdrop-filter: blur(16px) !important;
+                    border: 1px solid rgba(255, 215, 0, 0.15) !important;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(140, 91, 255, 0.1) !important;
+                    border-radius: 16px !important;
+                }
+                .amount-btn {
+                    background: rgba(16, 9, 28, 0.6) !important;
+                    border: 1px solid rgba(140, 91, 255, 0.3) !important;
+                    color: #ffffff !important;
+                    transition: all 0.2s ease-in-out !important;
+                }
+                .amount-btn:hover {
+                    border-color: #ffbe1a !important;
+                    box-shadow: 0 0 10px rgba(255, 190, 26, 0.3) !important;
+                }
+                .amount-btn.active-btn {
+                    background: linear-gradient(135deg, #FFE27C 0%, #FFBE1A 30%, #D4AF37 70%, #AA7C11 100%) !important;
+                    color: #0c0817 !important;
+                    border-color: transparent !important;
+                    box-shadow: 0 0 15px rgba(255, 190, 26, 0.5) !important;
+                }
+                .confirm-btn {
+                    background: linear-gradient(135deg, #FFE27C 0%, #FFBE1A 30%, #D4AF37 70%, #AA7C11 100%) !important;
+                    color: #0c0817 !important;
+                    font-weight: 900 !important;
+                    text-transform: uppercase !important;
+                    letter-spacing: 0.05em !important;
+                    box-shadow: 0 4px 15px rgba(255, 190, 26, 0.4) !important;
+                    transition: all 0.2s ease-in-out !important;
+                }
+                .confirm-btn:hover {
+                    transform: translateY(-2px) !important;
+                    box-shadow: 0 6px 20px rgba(255, 190, 26, 0.6) !important;
+                }
+                .confirm-btn:active {
+                    transform: translateY(1px) !important;
+                }
+                input[type="text"], input[type="number"], select {
+                    background: rgba(16, 9, 28, 0.8) !important;
+                    border: 1px solid rgba(140, 91, 255, 0.4) !important;
+                    color: #ffffff !important;
+                    border-radius: 10px !important;
+                    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+                    outline: none !important;
+                }
+                input[type="text"]:focus, input[type="number"]:focus, select:focus {
+                    border-color: #ffbe1a !important;
+                    box-shadow: 0 0 10px rgba(255, 190, 26, 0.5), inset 0 2px 4px rgba(0,0,0,0.6) !important;
+                }
+            </style>
         </head>
-        <body class="bg-[#F6F9FF] font-sans min-h-screen pb-10">
-            <div class="flex items-center justify-between p-4 bg-white border-b border-gray/30 shadow-xs">
-                <button onclick="window.location.href='/'" class="p-2 text-gray-600 font-bold">❮ Back</button>
-                <h1 class="font-extrabold text-lg">${name}</h1>
+        <body class="min-h-screen pb-10">
+            <div class="flex items-center justify-between p-4 header-bar">
+                <button onclick="window.location.href='/'" class="p-2 text-white font-bold">❮ Back</button>
+                <h1 class="font-extrabold text-lg text-white">${name}</h1>
                 <div class="flex items-center gap-2">
-                    <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-[#F2F4FF] text-main border border-none text-xs rounded-sm h-8 px-2 font-bold focus:outline-none shadow-sm cursor-pointer hover:bg-gray-200 transition-all">
+                    <select id="currencySelector" onchange="changeCurrency(this.value)" class="h-8 px-2 font-bold cursor-pointer">
                         <option value="INR">INR (₹)</option>
                         <option value="USD">USD ($)</option>
                         <option value="CAD">CAD (C$)</option>
                         <option value="SGD">SGD (S$)</option>
                         <option value="AED">AED (AED)</option>
                     </select>
-                    <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-bold">Cycle #${cycle}</span>
+                    <span class="text-xs bg-amber-500/20 text-[#ffbe1a] border border-amber-500/30 px-3 py-1 rounded-full font-bold">Cycle #${cycle}</span>
                 </div>
             </div>
 
             <div class="p-5 flex flex-col gap-5 max-w-md mx-auto">
-                <div class="bg-white rounded-2xl p-5 shadow-md flex flex-col gap-3">
-                    <span class="text-xs text-gray-400 font-bold uppercase">Balance & Limits</span>
+                <div class="casino-card p-5 flex flex-col gap-3">
+                    <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Balance & Limits</span>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Your Wallet:</span>
-                        <span class="font-extrabold text-lg text-primary">₹${userSession.balance.toFixed(2)}</span>
+                        <span class="text-gray-300">Your Wallet:</span>
+                        <span class="font-extrabold text-lg text-[#ffbe1a]">₹${userSession.balance.toFixed(2)}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Base Price:</span>
-                        <span class="font-semibold text-gray-800">₹${price.toFixed(2)}</span>
+                        <span class="text-gray-300">Base Price:</span>
+                        <span class="font-semibold text-white">₹${price.toFixed(2)}</span>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl p-5 shadow-md flex flex-col gap-4">
-                    <label class="font-bold text-gray-700">Enter Your 3-Digit Guess:</label>
-                    <input id="betNumbers" type="text" maxlength="3" placeholder="e.g. 579" class="w-full text-center text-3xl font-black p-3 tracking-widest border border-gray rounded-xl bg-gray-50 focus:border-primary outline-none" />
+                <div class="casino-card p-5 flex flex-col gap-4">
+                    <label class="font-bold text-gray-200">Enter Your 3-Digit Guess:</label>
+                    <input id="betNumbers" type="text" maxlength="3" placeholder="e.g. 579" class="w-full text-center text-3xl font-black p-3 tracking-widest outline-none" />
                     
-                    <label class="font-bold text-gray-700 mt-2">Bet Amount (INR):</label>
+                    <label class="font-bold text-gray-200 mt-2">Bet Amount (INR):</label>
                     <div class="grid grid-cols-5 gap-2">
-                        <button onclick="selectAmount(10, event)" class="amount-btn p-2 text-sm bg-gray-100 rounded-lg hover:bg-primary hover:text-white font-bold transition-all">₹10</button>
-                        <button onclick="selectAmount(50, event)" class="amount-btn p-2 text-sm bg-gray-100 rounded-lg hover:bg-primary hover:text-white font-bold transition-all">₹50</button>
-                        <button onclick="selectAmount(100, event)" class="amount-btn p-2 text-sm bg-primary text-white rounded-lg font-bold transition-all">₹100</button>
-                        <button onclick="selectAmount(500, event)" class="amount-btn p-2 text-sm bg-gray-100 rounded-lg hover:bg-primary hover:text-white font-bold transition-all">₹500</button>
-                        <button onclick="selectAmount(1000, event)" class="amount-btn p-2 text-sm bg-gray-100 rounded-lg hover:bg-primary hover:text-white font-bold transition-all">₹1000</button>
+                        <button onclick="selectAmount(10, event)" class="amount-btn p-2 text-sm rounded-lg font-bold transition-all">₹10</button>
+                        <button onclick="selectAmount(50, event)" class="amount-btn p-2 text-sm rounded-lg font-bold transition-all">₹50</button>
+                        <button onclick="selectAmount(100, event)" class="amount-btn active-btn p-2 text-sm rounded-lg font-bold transition-all">₹100</button>
+                        <button onclick="selectAmount(500, event)" class="amount-btn p-2 text-sm rounded-lg font-bold transition-all">₹500</button>
+                        <button onclick="selectAmount(1000, event)" class="amount-btn p-2 text-sm rounded-lg font-bold transition-all">₹1000</button>
                     </div>
-                    <input id="customAmount" type="number" value="${price}" class="w-full text-center p-2 mt-2 border border-gray rounded-lg bg-gray-50 font-bold" />
+                    <input id="customAmount" type="number" value="${price}" class="w-full text-center p-2 mt-2 font-bold" />
                 </div>
 
-                <button onclick="submitBet()" class="w-full py-4 rounded-xl text-white font-extrabold text-lg bg-linear-to-r from-[#0984e3] to-[#00D4FF] shadow-lg active:scale-[0.98] transition-all">
+                <button onclick="submitBet()" class="w-full py-4 rounded-xl confirm-btn shadow-lg active:scale-[0.98] transition-all">
                     Confirm Ticket Booking
                 </button>
             </div>
@@ -520,12 +584,10 @@ function renderDetailPage(req, res, name, cycle, price) {
                     document.getElementById('customAmount').value = (val * rate).toFixed(2);
                     const btns = document.querySelectorAll('.amount-btn');
                     btns.forEach(b => {
-                        b.classList.remove('bg-primary', 'text-white');
-                        b.classList.add('bg-gray-100');
+                        b.classList.remove('active-btn');
                     });
                     if (e && e.target) {
-                        e.target.classList.remove('bg-gray-100');
-                        e.target.classList.add('bg-primary', 'text-white');
+                        e.target.classList.add('active-btn');
                     }
                 }
 
@@ -812,7 +874,7 @@ app.get('/admin', (req, res) => {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>AXN Admin Dashboard</title>
+            <title>bet999x Admin Dashboard</title>
             <link rel="stylesheet" href="/dd.css">
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <style>
@@ -830,7 +892,7 @@ app.get('/admin', (req, res) => {
             <div class="bg-slate-900 text-white p-5 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">⚙️</span>
-                    <h1 class="text-xl font-black tracking-wide">AXN AGENCY ADMIN</h1>
+                    <h1 class="text-xl font-black tracking-wide">bet999x ADMIN</h1>
                 </div>
                 <button onclick="window.location.href='/'" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-sm font-bold rounded-lg border border-slate-700">Client Panel ❯</button>
             </div>
@@ -1227,12 +1289,12 @@ app.post('/user/coupon-code', (req, res) => {
                 discountGiven: bonus
             }
         });
-    } else if (upperCode === 'AXN100') {
+    } else if (upperCode === 'AXN100' || upperCode === 'BET999X100') {
         const bonus = 100.00;
         userSession.balance += bonus;
         return res.json({
             success: true,
-            msg: 'Coupon AXN100 applied successfully!',
+            msg: `Coupon ${upperCode} applied successfully!`,
             data: {
                 discountType: 'fixed',
                 discountValue: bonus,
@@ -1242,6 +1304,24 @@ app.post('/user/coupon-code', (req, res) => {
     } else {
         return res.json({ success: false, msg: 'Invalid or expired coupon code.' });
     }
+});
+
+// Daily Check-In Reward Claim Endpoint
+app.post('/user/daily-reward/claim', (req, res) => {
+    if (!userSession.isAuthenticated) {
+        return res.status(401).json({ status: false, message: 'Please sign in first to claim daily rewards.' });
+    }
+    
+    // Check if claimed already (demo resets, so we let them claim ₹5 demo coins)
+    const rewardVal = 5.00;
+    userSession.balance += rewardVal;
+    
+    res.json({
+        status: true,
+        type: 'amount',
+        value: rewardVal.toFixed(2),
+        message: `Successfully claimed daily reward of ₹${rewardVal.toFixed(2)}!`
+    });
 });
 
 // Wallet Deposit simulator
@@ -1436,7 +1516,7 @@ app.get('*', (req, res) => {
 // Start the express server
 app.listen(PORT, () => {
     console.log(`========================================================`);
-    console.log(` AXN Agency Server is running on: http://localhost:${PORT}`);
+    console.log(` bet999x Server is running on: http://localhost:${PORT}`);
     console.log(` Open this link in your browser to test the full site.`);
     console.log(`========================================================`);
 });

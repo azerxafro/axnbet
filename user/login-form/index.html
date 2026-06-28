@@ -4,189 +4,185 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In</title>
- <link rel="stylesheet" href="/dd.css">
+  <link rel="stylesheet" href="/dd.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
-    /* Nice fade transitions */
-   #otpSection, #pwdSection { transition: all 0.3s ease-in-out; }
-  #getOtpBtn:not(.pointer-events-none):hover {
-    opacity: 0.8;
-    transform: scale(1.02);
-  }
+    body {
+      font-family: 'Outfit', sans-serif !important;
+      background: radial-gradient(circle at top, #1c0e35 0%, #080512 100%) !important;
+      color: #e2dcfc !important;
+      margin: 0;
+      padding: 0;
+    }
+    .login-container {
+      background: rgba(28, 18, 48, 0.65) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border: 1px solid rgba(255, 215, 0, 0.15) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(140, 91, 255, 0.1) !important;
+      border-radius: 20px !important;
+      padding: 24px !important;
+    }
+    #otpSection, #pwdSection { transition: all 0.3s ease-in-out; }
+    
+    .tab-active {
+      background: linear-gradient(135deg, #FFE27C 0%, #FFBE1A 30%, #D4AF37 70%, #AA7C11 100%) !important;
+      color: #0c0817 !important;
+      box-shadow: 0 0 15px rgba(255, 190, 26, 0.5) !important;
+      border-radius: 8px !important;
+      font-weight: 800;
+    }
 
-  /* Active tab style */
-  .tab-active {
-    background: white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    color: #000 !important;
-    transition: all 0.2s ease-in-out;
-  }
-
-  .tab-inactive {
-    background: transparent;
-    color: #666;
-  }
+    .tab-inactive {
+      background: transparent !important;
+      color: #a7a3c0 !important;
+      border-radius: 8px !important;
+      font-weight: 500;
+    }
+    
+    .input-field-group {
+      background: rgba(16, 9, 28, 0.8) !important;
+      border: 1px solid rgba(140, 91, 255, 0.4) !important;
+      border-radius: 10px !important;
+    }
+    .input-field-group:focus-within {
+      border-color: #ffbe1a !important;
+      box-shadow: 0 0 12px rgba(255, 190, 26, 0.4) !important;
+    }
+    
+    .submit-btn {
+      background: linear-gradient(135deg, #FFE27C 0%, #FFBE1A 30%, #D4AF37 70%, #AA7C11 100%) !important;
+      color: #0c0817 !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      box-shadow: 0 4px 15px rgba(255, 190, 26, 0.4) !important;
+      border-radius: 9999px !important;
+      transition: all 0.2s ease-in-out !important;
+    }
+    .submit-btn:disabled {
+      opacity: 0.35 !important;
+      background: rgba(140, 91, 255, 0.2) !important;
+      color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: none !important;
+    }
+    
+    svg path {
+      stroke: #a7a3c0 !important;
+    }
   </style>
 </head>
-<body>
-  <div class="flex flex-col bg-white h-screen font-normal text-main bg-contain bg-no-repeat"
-      style="background-image: url(/back.webp);">
+<body class="min-h-screen flex flex-col justify-center">
+  <div class="flex flex-col p-5 w-full max-w-md mx-auto">
     
-    <!-- Header -->
-    <div class="flex flex-col w-full bg-white relative z-40"
-         style="background: rgba(0, 0, 0, 0); box-shadow: none;">
-      <div class="w-full h-11 flex flex-row items-center relative z-50">
-        <div class="absolute top-0 left-0 h-full pl-3 flex items-center">
-          <div class="mr-2 cursor-pointer" onclick="window.history.back()">
-            <svg class="size-4 text-main" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" >
-              <path d="M10.5 2L5 7.99676L10.5 14"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </div>
-        </div>
-      </div>
+    <!-- Back Button -->
+    <div class="mb-4">
+      <button onclick="window.location.href='/'" class="p-2 text-white font-bold flex items-center gap-1">❮ Back</button>
     </div>
 
     <link rel="stylesheet" href="/assets/global/css/iziToast.min.css">
-<script src="/assets/global/js/iziToast.min.js"></script>
+    <script src="/assets/global/js/iziToast.min.js"></script>
 
-<script>
-    "use strict";
-    function notify(status,message) {
-        iziToast[status]({
-            message: message,
-            position: "topRight"
-        });
-    }
-</script>
+    <script>
+        "use strict";
+        function notify(status,message) {
+            iziToast[status]({
+                message: message,
+                position: "topRight"
+            });
+        }
+    </script>
 
-
-    <!-- Login Form -->
-    <form id="loginForm" class="account-form" method="POST" action="/user/login-form">
-      <input type="hidden" name="_token" value="Tqm5uNb1VpWm0RgqXObcWw3bwKiq8YXOg9oL3w1Z">      <div class="flex flex-col p-5 flex-1 overflow-auto">
-
-        <div class="flex flex-col mb-5">
-            <center>
-          <span class="text-3xl font-bold mb-2">User Login</span><br/><span style="color:red; font-size:12px;">Demo Account: admin / 1234</span></center>
-          <!--<span>Member account <br> If you forgot your password, please contact customer service.</span>-->
-        </div>
-
-        <!-- Tabs -->
-        <div class="inline-flex rounded-xl bg-[#C0E0FF] font-semibold mb-5">
-          <div class="h-fit gap-2 items-center flex-nowrap w-full flex p-0.75">
-            <button id="pwdBtn" type="button"
-                    class="z-0 w-full flex group relative justify-center items-center cursor-pointer h-8 text-small rounded-small flex-1 p-0 tab-inactive" 
-                    >
-              <span class="absolute z-0 inset-0 rounded-small bg-white shadow-small"></span>
-              <div class="relative z-10 text-default-foreground">Password Login</div>
-            </button>
-            <button id="otpBtn" type="button"
-                    class="z-0 w-full flex group relative justify-center items-center cursor-pointer h-15 text-small rounded-small flex-1 p-0 tab-active"   data-selected="true">
-              <div class="relative z-10 text-default-500" >OTP Login</div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Phone Input -->
+    <!-- Login Form Container -->
+    <div class="login-container">
+      <form id="loginForm" class="account-form" method="POST" action="/user/login-form">
+        <input type="hidden" name="_token" value="Tqm5uNb1VpWm0RgqXObcWw3bwKiq8YXOg9oL3w1Z">
         <div class="flex flex-col">
-          <div class="group flex flex-col w-full bg-white rounded-[10px]">
-            <div class="relative w-full inline-flex flex-row items-center gap-3 border border-gray rounded-[10px] h-14 p-4">
-              <span class="pr-2 border-gray border-r text-main">+91</span>
-              <input id="phoneInput" name="username" maxlength="10" type="text"
-                     placeholder="Please enter phone number"
-                     class="w-full bg-transparent outline-none" value="admin" required />
+
+          <div class="flex flex-col mb-6 text-center">
+            <span class="text-3xl font-black text-white tracking-wide">User Login</span>
+            <span class="text-xs text-amber-400 mt-2 font-bold bg-amber-400/10 border border-amber-400/20 py-1 px-3 rounded-full self-center">Demo: admin / 1234</span>
+          </div>
+
+          <!-- Tabs -->
+          <div class="inline-flex rounded-xl bg-black/40 border border-purple-500/20 font-semibold mb-6 p-1">
+            <div class="h-fit gap-1 items-center flex-nowrap w-full flex">
+              <button id="pwdBtn" type="button" class="z-0 w-full flex justify-center items-center cursor-pointer h-10 text-small tab-inactive">
+                Password Login
+              </button>
+              <button id="otpBtn" type="button" class="z-0 w-full flex justify-center items-center cursor-pointer h-10 text-small tab-active" data-selected="true">
+                OTP Login
+              </button>
             </div>
           </div>
-             <!-- OTP Section -->
-          <div id="otpSection" class="mt-3" ">
-            <div class="group flex flex-col w-full bg-white rounded-[10px]">
-              <div class="relative w-full inline-flex flex-row items-center gap-3 border border-gray rounded-[10px] h-14 p-4">
+
+          <!-- Phone Input -->
+          <div class="flex flex-col">
+            <div class="input-field-group relative w-full inline-flex flex-row items-center gap-3 h-14 p-4">
+              <span class="pr-2 border-purple-500/30 border-r text-gray-300 font-bold">+91</span>
+              <input id="phoneInput" name="username" maxlength="10" type="text"
+                     placeholder="Please enter phone number"
+                     class="w-full bg-transparent outline-none text-white font-bold" value="admin" required />
+            </div>
+
+            <!-- OTP Section -->
+            <div id="otpSection" class="mt-3">
+              <div class="input-field-group relative w-full inline-flex flex-row items-center gap-3 h-14 p-4">
                 <input id="otpInput" maxlength="6" type="text" placeholder="Enter OTP" name="code"
-                       class="w-full bg-transparent outline-none" />
+                       class="w-full bg-transparent outline-none text-white font-bold" />
                 <button id="getOtpBtn" type="button"
-                        class="px-4 min-w-20 h-10 text-small rounded-medium opacity-50 pointer-events-none bg-transparent text-primary font-bold transition-all">
+                        class="px-4 min-w-20 h-10 text-xs rounded-medium opacity-50 pointer-events-none bg-transparent text-amber-400 font-bold transition-all">
                   GET OTP
                 </button>
               </div>
             </div>
-          </div>
 
-          <!-- Password Section -->
-          <div id="pwdSection" class="mt-3" style="display:none;">
-            <div class="group flex flex-col w-full bg-white rounded-[10px]">
-              <div class="relative w-full inline-flex flex-row items-center gap-3 border border-gray rounded-[10px] h-14 p-4">
+            <!-- Password Section -->
+            <div id="pwdSection" class="mt-3" style="display:none;">
+              <div class="input-field-group relative w-full inline-flex flex-row items-center gap-3 h-14 p-4">
                 <input id="passwordInput" type="password" name="password"
                        placeholder="Enter password" maxlength="18"
-                       class="w-full bg-transparent outline-none" value="1234" />
+                       class="w-full bg-transparent outline-none text-white font-bold" value="1234" />
                 <div class="size-5 cursor-pointer" id="togglePassword">
-                 <!-- ️ nw Eye Off Icon -->
-<svg id="eyeOff" xmlns="http://www.w3.org/2000/svg" 
-     viewBox="0 0 24 24" fill="none" 
-     style="width:1.25rem;height:1.25rem;">
-  <path d="M2 2L22 22" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round"/>
-  <path d="M9.88 5.08C10.58 5.03 11.29 5 12 5C17.52 5 22 10 22 10C22 10 20.22 12.03 17.52 13.85M15.12 15.54C14.17 15.83 13.12 16 12 16C6.48 16 2 11 2 11C2 11 3.78 8.97 6.48 7.15" 
-        stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round"/>
-</svg>
-
-<!-- nw️ Eye On Icon -->
-<svg id="eyeOn" xmlns="http://www.w3.org/2000/svg" 
-     viewBox="0 0 24 24" fill="none" 
-     style="width:1.25rem;height:1.25rem;display:none;">
-  <path d="M12 5C7 5 3 10 3 10C3 10 7 15 12 15C17 15 21 10 21 10C21 10 17 5 12 5Z" 
-        stroke="black" stroke-opacity="0.6" stroke-width="2"/>
-  <circle cx="12" cy="10" r="2.5" fill="black" fill-opacity="0.6"/>
-</svg>
-
+                  <!-- Eye Off Icon -->
+                  <svg id="eyeOff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" style="width:1.25rem;height:1.25rem;">
+                    <path d="M2 2L22 22" stroke="white" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M9.88 5.08C10.58 5.03 11.29 5 12 5C17.52 5 22 10 22 10C22 10 20.22 12.03 17.52 13.85M15.12 15.54C14.17 15.83 13.12 16 12 16C6.48 16 2 11 2 11C2 11 3.78 8.97 6.48 7.15" stroke="white" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <!-- Eye On Icon -->
+                  <svg id="eyeOn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" style="width:1.25rem;height:1.25rem;display:none;">
+                    <path d="M12 5C7 5 3 10 3 10C3 10 7 15 12 15C17 15 21 10 21 10C21 10 17 5 12 5Z" stroke="white" stroke-opacity="0.6" stroke-width="2"/>
+                    <circle cx="12" cy="10" r="2.5" fill="white" fill-opacity="0.6"/>
+                  </svg>
                 </div>
               </div>
             </div>
+
+            <!-- Remember Password -->
+            <div id="rememberSection" class="flex items-center justify-between pt-4">
+              <label class="flex items-center cursor-pointer text-gray-300">
+                <input id="rememberCheckbox" class="mr-2 w-5 h-5 cursor-pointer accent-amber-500" type="checkbox" />
+                <span class="text-sm">Remember password</span>
+              </label>
+            </div>
           </div>
 
-          <!-- Remember Password -->
-          <div id="rememberSection" class="flex items-center justify-between pt-3">
-            <label class="flex items-center cursor-pointer">
-              <input id="rememberCheckbox" class="mr-2 w-5 h-5 cursor-pointer" type="checkbox" />
-              <span class="text-sm">Remember password</span>
-            </label>
+          <!-- Sign In -->
+          <button id="signInBtn" type="submit" disabled class="mt-6 w-full h-13 submit-btn text-base font-extrabold active:scale-[0.98] transition-all">
+            Sign in
+          </button>
+
+          <!-- Register link -->
+          <div class="text-center text-sm font-semibold mt-6 pt-4 border-t border-purple-500/20">
+            <div class="text-gray-400 mb-3">Don't have an account?</div>
+            <button type="button" onclick="window.location.href='/user/register-form'" class="w-full py-3 border border-amber-500/40 text-amber-400 font-extrabold rounded-full hover:bg-amber-500/10 active:scale-[0.98] transition-all">
+              Register
+            </button>
           </div>
+
         </div>
-
-        <!-- Sign In -->
-        <button id="signInBtn" type="submit" disabled
-                class="mt-5 px-4 min-w-20 h-13 text-white text-base font-semibold rounded-full opacity-30 transition-all"
-                style=" background: linear-gradient(to right, #0984e3, #00D4FF);
-                       box-shadow: rgba(0,153,235,0.5) 0px 4px 12px;">
-          Sign in
-        </button>
-
-     
-        <!-- Register -->
-      <div class="text-center text-base font-semibold my-5">
-  <div style="color:#0099EB; font-size:1rem; font-weight:600; margin-bottom:0.75rem;">
-    Don't have an account?
-  </div>
-
-  <span
-    onclick="window.location.href='/user/register-form'"
-    style="display: block;
-           width: 100%;
-           background: linear-gradient(to right, #0984e3, #00D4FF);
-           box-shadow: rgba(0,153,235,0.5) 0px 4px 12px;
-           color: white;
-           font-weight: 600;
-           border-radius: 9999px;
-           padding: 0.9rem 1rem;
-           cursor: pointer;
-           transition: all 0.2s ease-in-out;
-           text-align: center;
-           font-size: 1rem;
-           box-sizing: border-box;">
-    Register
-  </span>
-</div>
-
-
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
  <div class="fixed bottom-0 w-full max-w-(--max-screen-width) z-50">
              
